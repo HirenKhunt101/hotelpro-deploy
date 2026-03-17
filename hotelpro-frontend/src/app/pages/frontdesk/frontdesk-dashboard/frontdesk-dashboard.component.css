@@ -1,0 +1,31 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.2rem;
+}
+
+.card-body p {
+  font-size: 1.1rem;
+}
+
+.table thead th {
+  font-weight: bold;
+}
+
+.table tbody td {
+  font-size: 0.95rem;
+}
+
+.badge {
+  font-size: 0.9rem;
+}
+
+.list-group-item {
+  font-size: 1.1rem;
+}

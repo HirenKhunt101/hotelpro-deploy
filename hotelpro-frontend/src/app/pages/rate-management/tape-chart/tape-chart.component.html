@@ -1,0 +1,246 @@
+<div class="p-2" style="background-color: #f1f8ff">
+  <div class="mx-3 d-flex mt-2 bg-white">
+    <div class="w-100 d-flex mx-3 justify-content-between">
+      <div class="d-flex my-2 align-items-center">
+        <div class="black_font">Start Date :</div>
+        <div class="ms-2">
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="Date"
+            [min]="Max"
+          />
+        </div>
+
+        <div class="black_font align-items-center ms-3">Week :</div>
+        <div class="input_container ms-2">
+          <input
+            type="number"
+            class="input form-control field text-center hide-spinner"
+            [(ngModel)]="Week"
+            [min]="2"
+          />
+
+          <div class="input_img" (click)="add()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="22"
+              fill="currentColor"
+              class="bi bi-plus-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+              />
+            </svg>
+          </div>
+          <div class="input_img1" (click)="sub()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="22"
+              fill="currentColor"
+              class="bi bi-dash-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="ms-3">
+          <button class="btn btn-success button w-auto" (click)="fetchdata()">
+            Find
+          </button>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="d-flex">
+          <div class="d-flex ms-2 align-items-center">
+            <div class="black_font">Filter :</div>
+          </div>
+          <div class="ms-2 align-self-center" style="width: 200px !important">
+            <ng-multiselect-dropdown
+              name="roomtype"
+              [placeholder]="'Select RoomType'"
+              [settings]="dropdownSettings"
+              [data]="dropdownList"
+              [(ngModel)]="selectedItems"
+              style="font-size: 13px !important; background: white !important"
+              (onSelect)="filterRoom()"
+              (onDeSelect)="filterRoom()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <div class="d-flex justify-content-right ms-4">
+          <div class="align-self-center d-flex">
+            <div>
+              <div class="reservation px-2">Reservation</div>
+              <div class="inhouse px-2 mt-1">In house</div>
+            </div>
+            <div>
+              <div class="renovation px-2">Maintenance </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mx-3 mt-2 inline2">
+    <div class="col-12 pl-0">
+      <div
+        style="
+          overflow-x: auto;
+          border-right: 1px solid rgba(0, 0, 0, 0.1);
+          max-height: 70vh !important;
+        "
+        id="scroll"
+      >
+        <table
+          class="table-bordered global_table"
+          style="overflow-x: hidden !important"
+        >
+          <thead>
+            <th style="z-index: 4">Room Type</th>
+            <th style="z-index: 4">Room</th>
+            <th style="z-index: 4">Condition</th>
+            <th style="z-index: 3" *ngFor="let item of DateArr; let i = index">
+              {{ item.date | date : "dd MMM" }} <br />
+              <a class="link text-decoration-none">
+                @if(item?.unAssignRooms?.length){
+                {{ "Assign-" + item?.unAssignRooms?.length }}
+                }
+              </a>
+            </th>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of RoomData; let i = index">
+              <ng-container
+                *ngFor="let room of item.roomDetails; let j = index"
+              >
+                <tr *ngIf="item.Show">
+                  <td style="z-index: 3">{{ item.roomTypeName }}</td>
+                  <td style="z-index: 3">{{ room.roomName }}</td>
+                  <td style="z-index: 3">
+                    <div class="d-flex justify-content-center">
+                      <div
+                        class="clean px-2"
+                        [ngClass]="{
+                          clean_active: room.roomCondition == 'clean'
+                        }"
+                      >
+                        Clean
+                      </div>
+                      <div
+                        class="dirty px-2"
+                        [ngClass]="{
+                          dirty_active: room.roomCondition == 'dirty'
+                        }"
+                      >
+                        Dirty
+                      </div>
+                    </div>
+                  </td>
+                  <td *ngFor="let d of DateArr; let k = index">
+                    <div class="overlap">
+                      <div class="rate first-content">
+                        <div>
+                          {{ item.dailyRates?.[k]?.baseRate }}
+                        </div>
+                      </div>
+                      <div class="second-content">
+                        <ng-container *ngFor="let r of room.reservation">
+                          <ng-container
+                            *ngIf="
+                              r.arrival <= d.date &&
+                              r.departure > d.date &&
+                              !r.tentative
+                            "
+                          >
+                            <div
+                              *ngIf="test(d.date, r)"
+                              [style]="
+                                'width:' +
+                                nightNumber(r.arrival, r.departure) * 100 +
+                                'px;'
+                              "
+                              [class]="'' + setBackground(r)"
+                            >
+                              <div class="d-flex">
+                                <div
+                                  class="col d-flex justify-content-center text-truncate"
+                                >
+                                  <div
+                                    style="margin-left: 4px !important"
+                                    class="text-truncate"
+                                  >
+                                    {{ r.guestName }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngFor="let m of room.maintenance">
+                          <ng-container
+                            *ngIf="m.startDate <= d.date && m.endDate >= d.date"
+                          >
+                            <div
+                              *ngIf="testmaintainance(d.date, m)"
+                              [style.width]="
+                                nightNumber(m.startDate, m.endDate) * 100 + 'px'
+                              "
+                              class="renovation"
+                            >
+                              <div
+                                class="d-flex align-items-center"
+                                style="cursor: pointer"
+                              >
+                                <!-- <div class="ms-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                        height="16" fill="black"
+                                                                        class="bi bi-house-slash" viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M13.879 10.414a2.5 2.5 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z" />
+                                                                        <path
+                                                                            d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708z" />
+                                                                    </svg>
+                                                                </div> -->
+                                <div
+                                  class="col d-flex justify-content-center"
+                                  style="
+                                    z-index: 0;
+                                    overflow: hidden;
+                                    padding-left: 4px;
+                                  "
+                                >
+                                  <div class="text-truncate">{{
+                                    m.reason
+                                  }}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

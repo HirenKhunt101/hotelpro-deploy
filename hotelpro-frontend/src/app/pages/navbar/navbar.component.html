@@ -1,0 +1,379 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary custom-bar">
+  <div class="container-fluid">
+    <a
+      class="navbar-brand p-0"
+      style="cursor: pointer"
+      (click)="gotoDashboard()"
+      ><img
+        src="../../../assets/images/hotelpro-logo-full-without.png"
+        alt=""
+        srcset=""
+        width="110px"
+    /></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link active link"
+            aria-current="page"
+            (click)="gotoDashboard()"
+            >Home</a
+          >
+        </li>
+        @if(userInfo?.propertyUnitId) {
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Create
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" routerLink="/create-reservation"
+                >Reservation</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/create-walkin">Walkin</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            View
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" routerLink="/reservation-list"
+                >Booking</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/tape-chart">Tape chart</a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/future-availability"
+                >Future availibility</a
+              >
+            </li>
+            <!-- <li><a class="dropdown-item" href="#">Arrivals</a></li>
+            <li><a class="dropdown-item" href="#">In house</a></li>
+            <li><a class="dropdown-item" href="#">Departure</a></li>
+            <li><a class="dropdown-item" href="#">Reservation</a></li>
+            <li><a class="dropdown-item" href="#">Cancellation</a></li>
+            <li><a class="dropdown-item" href="#">Checked out</a></li> -->
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Manage
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" routerLink="/future-rates"
+                >Manage rates</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/yield-management"
+                >Yield management</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/house-keeping"
+                >House keeping</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/room-maintenance"
+                >Room maintenance</a
+              >
+            </li>
+          </ul>
+        </li>
+        <!-- <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Statistics
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Night audit</a></li>
+            <li><a class="dropdown-item" href="#">Reports</a></li>
+          </ul>
+        </li> -->
+        }
+        <li class="nav-item">
+          <div
+            class="nav-link"
+            style="cursor: pointer"
+            (click)="openChangePassword(content)"
+          >
+            Change Password
+          </div>
+        </li>
+      </ul>
+      <div *ngIf="notifications">
+        <div class="dropdown">
+          <div
+            class="dropdown-toggle custom_btn"
+            type="button"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="outside"
+            aria-expanded="false"
+          >
+            <i class="material-symbols-rounded" style="vertical-align: middle">
+              notifications
+            </i>
+            <span
+              class="badge text-bg-secondary rounded-circle"
+              style="
+                position: relative;
+                left: -6px;
+                top: -15px;
+                font-size: 10px;
+              "
+              *ngIf="notifications?.length != 0"
+              >{{ notifications.length }}</span
+            >
+          </div>
+          <div class="dropdown-menu dropdown-menu-end" id="notificationId">
+            <div
+              style="height: 50dvh; overflow: auto"
+              *ngIf="notifications?.length != 0"
+            >
+              <ng-container *ngFor="let n of notifications">
+                <div class="dropdown-item">
+                  <!-- your rate is change to {{ n?.message?.rate }} at
+              {{ n?.createdAt }} by {{ n?.createdBy }} -->
+                  @if(n.eventName=='Rate Updated'){
+                  <ngb-toast
+                    [header]="n.eventName"
+                    [autohide]="false"
+                    (hidden)="dismiss(n._id)"
+                  >
+                    <div
+                      style="text-wrap: pretty"
+                      (click)="goToPage('/create-reservation', n._id)"
+                    >
+                      <p class="mb-0">Date: {{ n.createdAt | date }}</p>
+                      <p class="mb-0">{{ n.message | json }}</p>
+                    </div>
+                    <div class="text-body-secondary mt-1">
+                      By {{ n.createdUserName }} At
+                      {{ n.createdAt | date : "medium" }}
+                    </div>
+                  </ngb-toast>
+                  }@else if(n.eventName=='Reservation Created'){
+                  <ngb-toast
+                    [header]="
+                      n?.message?.customerName +
+                      '  Reserved (' +
+                      n?.message?.groupNumber +
+                      ')'
+                    "
+                    [autohide]="false"
+                    (hidden)="dismiss(n._id)"
+                  >
+                    <div
+                      style="text-wrap: pretty"
+                      (click)="goToPage('/guest-folio/' + n?.groupId, n._id)"
+                    >
+                      <p class="mb-0">
+                        Arrival: {{ n.message?.arrival | date }}=> Departure:{{
+                          n.message?.departure | date
+                        }}
+                      </p>
+                      <p class="mb-0">
+                        Departure: {{ n.message?.departure | date }}
+                      </p>
+                      <p class="mb-0">
+                        Total Rooms: {{ n.message.rooms.length }}
+                      </p>
+                      <p class="mb-0" *ngFor="let r of n.message.rooms">
+                        {{ r.roomtype }}-{{ r.rateName }} (Room:{{
+                          r.roomName
+                        }})
+                      </p>
+                    </div>
+                    <div class="text-body-secondary mt-1">
+                      By {{ n.createdUserName }} At
+                      {{ n.createdAt | date : "medium" }}
+                    </div>
+                  </ngb-toast>
+                  } @else{
+                  <ngb-toast
+                    [header]="n.eventName"
+                    [autohide]="false"
+                    (hidden)="dismiss(n._id)"
+                  >
+                    <div
+                      style="text-wrap: pretty"
+                      (click)="goToPage('/', n._id)"
+                    >
+                      <p class="mb-0">{{ n.message | json }}</p>
+                    </div>
+                    <div class="text-body-secondary mt-1">
+                      By {{ n.createdUserName }} At
+                      {{ n.createdAt | date : "medium" }}
+                    </div>
+                  </ngb-toast>
+                  }
+                </div>
+              </ng-container>
+            </div>
+
+            <div
+              class="d-flex justify-content-end m-2"
+              style="min-width: 300px"
+            >
+              <!-- <button
+                type="button"
+                class="btn btn-primary me-1"
+                *ngIf="notifications?.length != 0"
+                (click)="goToPage('view-notification')"
+              >
+                View All
+              </button> -->
+              <button
+                type="button"
+                class="btn btn-secondary ms-1"
+                (click)="markAsRead()"
+                *ngIf="notifications?.length != 0"
+              >
+                Mark All As Read
+              </button>
+              <div *ngIf="notifications?.length == 0">
+                No New Notifications Found!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @if(userInfo?.userType == "client") {
+      <div class="me-2" *ngIf="userInfo?.propertyUnitId">
+        <select
+          id="options"
+          [(ngModel)]="userInfo.propertyUnitId"
+          class="form-control"
+          style="appearance: auto"
+          (change)="switchPropertyUnit()"
+        >
+          <option
+            *ngFor="let item of userInfo.propertyUnits"
+            [value]="item._id"
+          >
+            {{ item.propertyUnitName }}({{ item.propertyUnitCode }})
+          </option>
+        </select>
+      </div>
+      } @if(userInfo?.userType == "frontdesk") {
+      <div class="me-2" *ngIf="userInfo?.propertyUnitId">
+        {{ userInfo?.propertyUnitName }}({{ userInfo?.propertyUnitCode }})
+      </div>
+      }
+
+      <!-- <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form> -->
+
+      <button
+        class="btn btn-outline-danger ms-2 border-0"
+        type="submit"
+        (click)="logOut()"
+      >
+        Logout
+        <i class="material-symbols-rounded" style="vertical-align: middle">
+          logout
+        </i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Change Password</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label"
+          >Current Password</label
+        >
+        <input
+          type="password"
+          placeholder="Enter Current Password"
+          name="oldPassword"
+          class="form-control"
+          [(ngModel)]="oldPassword"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword2" class="form-label"
+          >New Password</label
+        >
+        <input
+          type="password"
+          placeholder="Enter New Password"
+          class="form-control"
+          name="newPassword"
+          [(ngModel)]="newPassword"
+        />
+        <small class="text-danger" *ngIf="passwordValidator()">
+          Password must be at least 8 characters long ,must contain at least one
+          uppercase letter, one lowercase letter, one number, and one special
+          character
+        </small>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      [disabled]="passwordValidator()"
+      (click)="modal.close(true)"
+    >
+      Update
+    </button>
+  </div>
+</ng-template>

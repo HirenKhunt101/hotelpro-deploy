@@ -1,0 +1,69 @@
+<div class="container container_form my-3 rounded">
+  <ul class="list-group list-group-flush py-3" style="list-style-type: none">
+    <li class="sidebar-item mt-2">
+      <a
+        [routerLink]="'/property-setup/' + propertyUnitId"
+        [routerLinkActive]="'text-white shadow rounded bg-primary p-1 d-block'"
+        class="sidebar-link text-decoration-none"
+      >
+        <i class="material-symbols-rounded mx-2" style="vertical-align: middle">
+          house
+        </i>
+        <span class="">Property Setup</span>
+      </a>
+    </li>
+
+    <li class="sidebar-item mt-2">
+      <a
+        [routerLink]="'/rooms-review/' + propertyUnitId"
+        [routerLinkActive]="'text-white shadow rounded bg-primary p-1 d-block'"
+        class="sidebar-link text-decoration-none"
+        [class.disabled]="propertyUnitId === 'ADD'"
+      >
+        <i class="material-symbols-rounded mx-2" style="vertical-align: middle">
+          king_bed
+        </i>
+        <span class="">Rooms Review</span>
+      </a>
+    </li>
+    <li class="sidebar-item mt-2">
+      <a
+        [routerLink]="'/policy-setup/' + propertyUnitId"
+        [routerLinkActive]="'text-white shadow rounded bg-primary p-1 d-block'"
+        class="sidebar-link text-decoration-none"
+        [class.disabled]="propertyUnitId === 'ADD'"
+      >
+        <i class="material-symbols-rounded mx-2" style="vertical-align: middle">
+          description
+        </i>
+        <span class="">Policy Setup</span>
+      </a>
+    </li>
+    <li class="sidebar-item mt-2">
+      <a
+        [routerLink]="'/baserate-setup/' + propertyUnitId"
+        [routerLinkActive]="'text-white shadow rounded bg-primary p-1 d-block'"
+        class="sidebar-link text-decoration-none"
+        [class.disabled]="propertyUnitId === 'ADD'"
+      >
+        <i class="material-symbols-rounded mx-2" style="vertical-align: middle">
+          table
+        </i>
+        <span class="">Baserate Setup</span>
+      </a>
+    </li>
+    <li class="sidebar-item mt-2">
+      <a
+        [routerLink]="'/tax-setup/' + propertyUnitId"
+        [routerLinkActive]="'text-white shadow rounded bg-primary p-1 d-block'"
+        class="sidebar-link text-decoration-none"
+        [class.disabled]="propertyUnitId === 'ADD'"
+      >
+        <i class="material-symbols-rounded mx-2" style="vertical-align: middle">
+          account_balance
+        </i>
+        <span class="">Tax Setup</span>
+      </a>
+    </li>
+  </ul>
+</div>

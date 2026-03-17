@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col">Rate Name</th>
+        <th class="col">Start Date</th>
+        <th class="col">End Date</th>
+        <th class="col">RoomTypes</th>
+        <th class="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ratePlan of ratePlanList; let i = index">
+        <td>
+          <a
+            class="link"
+            style="cursor: pointer"
+            [routerLink]="
+              ratePlan.isBaseRate
+                ? '/baserate-setup/' + propertyUnitId
+                : '/rateplan-setup/' + ratePlan._id
+            "
+          >
+            {{ ratePlan?.ratePlanName }}
+          </a>
+        </td>
+        <td>{{ ratePlan?.rateRoomTypes?.[0]?.startDate }}</td>
+        <td>{{ ratePlan?.rateRoomTypes?.[0]?.endDate }}</td>
+        <td>
+          <ng-container *ngFor="let roomtype of ratePlan?.rateRoomTypes">
+            {{ roomtype.roomTypeName }}
+          </ng-container>
+        </td>
+        <td>
+          {{ ratePlan?.active ? "Active" : "Deactive" }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<button
+  type="button"
+  class="btn btn-outline-secondary ms-2"
+  [routerLink]="'/rateplan-setup/Add'"
+>
+  Add Rate Plan
+</button>

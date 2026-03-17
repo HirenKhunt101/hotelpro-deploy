@@ -1,0 +1,154 @@
+.inline2 {
+  display: flex;
+}
+
+.button {
+  width: 154px;
+  border-radius: 7px;
+}
+
+.link {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #387cf7;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.global_table td {
+  border: 0.5px solid #f3f3f3;
+}
+
+.global_table td:first-child {
+  border-left: 0.1px solid rgba(0, 0, 0, 0.1);
+}
+
+.global_table td:last-child {
+  border-right: 0.1px solid rgba(0, 0, 0, 0.1);
+}
+
+input[type="checkbox"]:checked {
+  /* background-image: url("../../../../assets/images/checkbox.png"); */
+  width: 14.5px;
+  margin-left: 0px;
+}
+
+.table_icon {
+  width: 20px;
+  cursor: pointer;
+}
+
+.clean {
+  column-width: 40px;
+}
+
+.dirty {
+  column-width: 40px;
+}
+
+.clean_active {
+  background: #6ccfca;
+  color: white;
+  border-radius: 10px;
+}
+
+.dirty_active {
+  background: #ffa4a3;
+  color: white;
+  border-radius: 10px;
+}
+
+.custom_label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #1d366d;
+  text-transform: capitalize;
+}
+
+.field {
+  font-weight: 400 !important;
+  color: black !important;
+  font-size: 13px;
+}
+
+.floor_table td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.floor_table td:first-child {
+  text-align: end;
+  width: 10%;
+}
+
+.input_container {
+  position: relative;
+}
+
+.input_img {
+  position: absolute;
+  bottom: 2px;
+  top: 4px;
+  right: 10px;
+  width: 17px;
+  height: 17px;
+  opacity: 0.5;
+}
+
+.table-box {
+  max-height: 431px;
+  overflow-y: auto;
+}
+
+.form-check-input {
+  width: 100%;
+  margin-left: 0px;
+}
+
+.blue_container1 {
+  background: #387cf7;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.add_table td:first-child {
+  width: 41.5%;
+}
+
+.add_table1 td:first-child {
+  width: 35%;
+}
+
+
+@media only screen and (max-width: 990px) {
+  .inline2 {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .button {
+    width: 70px;
+    border-radius: 7px;
+  }
+
+  .global_table th,
+  .global_table td {
+    font-size: 8px;
+  }
+
+  .global_table {
+    overflow-x: scroll;
+  }
+
+  .x_scroll {
+    overflow-x: auto;
+  }
+}

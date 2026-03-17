@@ -1,0 +1,259 @@
+<div class="row g-0">
+  <div class="ps-5 pe-3" [class]="!ratePlanId ? 'col-9' : 'col-12'">
+    <div class="container container_form my-3 rounded">
+      <form [formGroup]="ratePlanForm">
+        <div class="row row-cols-1 row-cols-md-2">
+          <div class="col mt-3">
+            <label class="form-label">Rate Plan Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="ratePlanName"
+              placeholder="Enter Room Plan Name"
+              [ngClass]="{
+                'is-invalid':
+                  (ratePlanForm.get('ratePlanName')?.dirty ||
+                    ratePlanForm.get('ratePlanName')?.touched) &&
+                  ratePlanForm.get('ratePlanName')?.invalid
+              }"
+            />
+            <small
+              class="text-danger"
+              *ngIf="
+                (ratePlanForm.get('ratePlanName')?.dirty ||
+                  ratePlanForm.get('ratePlanName')?.touched) &&
+                ratePlanForm.get('ratePlanName')?.invalid
+              "
+              >RoomType Name is required</small
+            >
+          </div>
+
+          <div class="col mt-3">
+            <label class="form-label">Rate Plan Short Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="ratePlanShortName"
+              placeholder="Enter Rate Plan Short Name"
+              [ngClass]="{
+                'is-invalid':
+                  (ratePlanForm.get('ratePlanShortName')?.dirty ||
+                    ratePlanForm.get('ratePlanShortName')?.touched) &&
+                  ratePlanForm.get('ratePlanShortName')?.invalid
+              }"
+            />
+            <small
+              class="text-danger"
+              *ngIf="
+                (ratePlanForm.get('ratePlanShortName')?.dirty ||
+                  ratePlanForm.get('ratePlanShortName')?.touched) &&
+                ratePlanForm.get('ratePlanShortName')?.invalid
+              "
+              >RoomType Category is required</small
+            >
+          </div>
+
+          <div class="col mt-3">
+            <label class="form-label">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="ratePlanDescription"
+              placeholder="Enter Description"
+              [ngClass]="{
+                'is-invalid':
+                  (ratePlanForm.get('ratePlanDescription')?.dirty ||
+                    ratePlanForm.get('ratePlanDescription')?.touched) &&
+                  ratePlanForm.get('ratePlanDescription')?.invalid
+              }"
+            />
+            <small
+              class="text-danger"
+              *ngIf="
+                (ratePlanForm.get('ratePlanDescription')?.dirty ||
+                  ratePlanForm.get('ratePlanDescription')?.touched) &&
+                ratePlanForm.get('ratePlanDescription')?.invalid
+              "
+              >Description is required</small
+            >
+          </div>
+          <div class="col mt-3">
+            <label class="form-label">No Show Policy</label>
+            <div>
+              <select
+                id="options"
+                formControlName="noShowPolicyId"
+                class="form-control"
+                style="appearance: auto"
+              >
+                <option value="">Select No Show Policy</option>
+                <option
+                  *ngFor="let option of noshowPolicyList"
+                  [value]="option._id"
+                >
+                  {{ option.noShowPolicyName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col mt-3">
+            <label class="form-label">Cancellation Policy</label>
+            <div>
+              <select
+                id="options"
+                formControlName="cancellationPolicyId"
+                class="form-control"
+                style="appearance: auto"
+              >
+                <option value="">Select Cancellation Policy</option>
+                <option
+                  *ngFor="let option of cancellationPolicyList"
+                  [value]="option._id"
+                >
+                  {{ option.cancelPolicyName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col mt-3">
+            <div class="d-flex mt-4">
+              <div class="mb-3 me-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  formControlName="isBaseRate"
+                />
+                <label class="form-check-label">BaseRate</label>
+              </div>
+              <div class="mb-3 me-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  formControlName="isRefundable"
+                />
+                <label class="form-check-label">Refundable</label>
+              </div>
+              <div class="mb-3 me-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  formControlName="active"
+                />
+                <label class="form-check-label">Active</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-3">
+            <table class="table text-center">
+              <thead>
+                <tr>
+                  <th class="col">Sr No.</th>
+                  <th class="col">Room Type</th>
+                  <th class="col">BaseRate</th>
+                  <th class="col">Adult</th>
+                  <th class="col">Child</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="roomTypeRates">
+                <tr
+                  *ngFor="let roomType of roomTypeRates.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <th scope="row">
+                    {{ i + 1 }}
+                  </th>
+                  <td>
+                    {{ roomType.get("roomTypeName")?.value }}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="text-center w-100 border-0 form-control"
+                      formControlName="baseRate"
+                    />
+                    <small
+                      class="text-danger"
+                      *ngIf="
+                        (roomType.get('baseRate')?.dirty ||
+                          roomType.get('baseRate')?.touched) &&
+                        roomType.get('baseRate')?.invalid
+                      "
+                    >
+                      Base rate is required
+                    </small>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="text-center w-100 border-0 form-control"
+                      formControlName="adultRate"
+                    />
+                    <small
+                      class="text-danger"
+                      *ngIf="
+                        (roomType.get('adultRate')?.dirty ||
+                          roomType.get('adultRate')?.touched) &&
+                        roomType.get('adultRate')?.invalid
+                      "
+                    >
+                      Adult rate is required
+                    </small>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="text-center w-100 border-0 form-control"
+                      formControlName="childRate"
+                    />
+                    <small
+                      class="text-danger"
+                      *ngIf="
+                        (roomType.get('childRate')?.dirty ||
+                          roomType.get('childRate')?.touched) &&
+                        roomType.get('childRate')?.invalid
+                      "
+                    >
+                      Child rate is required
+                    </small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-12 mb-2">
+            <div class="d-flex justify-content-center">
+              <button
+                *ngIf="!ratePlanId"
+                class="btn btn-primary ms-2"
+                type="button"
+                (click)="navigateToRoomSetup()"
+              >
+                Back
+              </button>
+              <button
+                class="btn btn-primary ms-2"
+                type="button"
+                [disabled]="ratePlanForm.invalid"
+                (click)="onSubmit()"
+              >
+                Submit
+              </button>
+              <button
+                *ngIf="!ratePlanId"
+                class="btn btn-primary ms-2"
+                type="button"
+                (click)="next()"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-3 px-3" *ngIf="!ratePlanId">
+    <app-property-sidebar></app-property-sidebar>
+  </div>
+</div>

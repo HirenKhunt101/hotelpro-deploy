@@ -1,0 +1,198 @@
+<div class="row g-0">
+  <div class="col-9 ps-5 pe-3">
+    <div class="container-fluid">
+      <div class="col-md-12 mt-4">
+        <div class="d-flex justify-content-end">
+          <button
+            class="btn btn-primary"
+            [routerLink]="'/roomtype-setup/' + propertyUnitId + '/ADD'"
+          >
+            Add Room Type
+          </button>
+        </div>
+      </div>
+      <table class="table" [formGroup]="roomTypesForm">
+        <thead>
+          <tr>
+            <th class="col">Room Type Name</th>
+            <th class="col">Adult & Child</th>
+            <th class="col">Status</th>
+            <th class="col"> Action </th>
+          </tr>
+        </thead>
+        <tbody formArrayName="roomTypes">
+          <ng-container
+            *ngFor="
+              let roomType of roomTypes.controls;
+              let i = index;
+              trackBy: trackByFn
+            "
+            [formGroupName]="i"
+          >
+            <tr>
+              <td>
+                <a
+                  [routerLink]="
+                    '/roomtype-setup/' +
+                    propertyUnitId +
+                    '/' +
+                    roomType.get('roomTypeId')?.value
+                  "
+                >
+                  {{ roomType.get("roomTypeName")?.value }}
+                </a>
+              </td>
+              <td>
+                <div class="link">
+                  Adults- {{ roomType.get("adultOccupancy")?.value }},Childs-{{
+                    roomType.get("childOccupancy")?.value
+                  }}
+                </div>
+              </td>
+              <td>
+                <div class="link">
+                  {{ roomType.get("active")?.value ? "Active" : "Deactive" }}
+                </div>
+              </td>
+              <td>
+                <button
+                  class="btn btn-primary"
+                  (click)="
+                    addRoom(i, {
+                      roomTypeId: roomType.get('roomTypeId')?.value
+                    })
+                  "
+                >
+                  Add Room
+                </button>
+                <i
+                  class="material-symbols-rounded ms-2"
+                  (click)="toggleRow(i)"
+                  [style]="
+                    isRowExpanded(i)
+                      ? '    rotate: 270deg;'
+                      : '    rotate: 90deg;'
+                  "
+                >
+                  arrow_forward_ios
+                </i>
+              </td>
+            </tr>
+            <tr *ngIf="isRowExpanded(i)">
+              <td colspan="4">
+                <table class="table" *ngIf="getRooms(i) as rooms">
+                  <thead>
+                    <tr>
+                      <th class="col">Sr No.</th>
+                      <th class="col">Room Name</th>
+                      <th class="col">Room Number</th>
+                      <th class="col" *ngIf="showActionBtn">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="rooms">
+                    <tr
+                      *ngFor="
+                        let room of rooms.controls;
+                        let j = index;
+                        trackBy: trackByFn
+                      "
+                      [formGroupName]="j"
+                    >
+                      <th scope="row">
+                        {{ j + 1 }}
+                      </th>
+                      <td>
+                        <input
+                          type="text"
+                          class="text-center w-100 border-0 form-control"
+                          formControlName="roomName"
+                        />
+                        <small
+                          class="text-danger"
+                          *ngIf="
+                            (room.get('roomName')?.dirty ||
+                              room.get('roomName')?.touched) &&
+                            room.get('roomName')?.invalid
+                          "
+                        >
+                          Room Name is required
+                        </small>
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          class="text-center w-100 border-0 form-control"
+                          formControlName="roomNumber"
+                        />
+                        <small
+                          class="text-danger"
+                          *ngIf="
+                            (room.get('roomNumber')?.dirty ||
+                              room.get('roomNumber')?.touched) &&
+                            room.get('roomNumber')?.invalid
+                          "
+                        >
+                          Room Number is required
+                        </small>
+                      </td>
+                      <td *ngIf="showActionBtn">
+                        <div>
+                          <button
+                            type="button"
+                            class="btn btn-primary"
+                            *ngIf="room.disabled"
+                            (click)="
+                              room.disabled ? room.enable() : room.disable()
+                            "
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-primary me-2"
+                            *ngIf="!room.disabled"
+                            (click)="editRoom(i, j, room.value)"
+                            [disabled]="room.invalid"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-danger"
+                            *ngIf="!room.disabled"
+                            (click)="deleteRoom(i, j)"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <div class="col-md-12 mt-4">
+        <div class="d-flex justify-content-center">
+          <button
+            class="btn btn-primary mb-3"
+            type="button"
+            (click)="editPropertyUnit()"
+            >Back</button
+          >
+          <button
+            class="btn btn-primary mb-3 ms-2"
+            type="button"
+            (click)="next()"
+            >Next</button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-3 px-3">
+    <app-property-sidebar></app-property-sidebar>
+  </div>
+</div>

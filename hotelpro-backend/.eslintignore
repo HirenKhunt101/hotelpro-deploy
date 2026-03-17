@@ -1,0 +1,13 @@
+.eslint.config.js
+node_modules/
+.env
+/.vscode
+/node_modules
+./dist
+
+*.yml
+*.yaml
+
+*.env
+.env
+.env.*

@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h5
+    *ngIf="type === 'confirmation' && headerMessage"
+    class="modal-title"
+    id="modal-basic-title"
+    [innerHTML]="sanitizeMsg(headerMessage)"
+  ></h5>
+  <h6
+    *ngIf="type !== 'confirmation' && message"
+    class="mb-0"
+    [innerHTML]="sanitizeMsg(message)"
+  ></h6>
+  <button
+    #closeButton
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="close(false)"
+  ></button>
+</div>
+<div class="modal-body" *ngIf="type === 'confirmation' && message">
+  <p [innerHTML]="sanitizeMsg(message)"></p>
+</div>
+<div class="modal-footer" *ngIf="type === 'confirmation'">
+  <button type="button" class="btn btn-secondary" (click)="close(false)">
+    Cancel
+  </button>
+  <button type="button" class="btn btn-primary" (click)="close(true)">
+    Confirm
+  </button>
+</div>

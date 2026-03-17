@@ -1,0 +1,8 @@
+<div>
+  {{ game$ | async | json }}
+</div>
+
+<app-ag-grid-table
+  [rowInputData]="userList"
+  [colLabels]="userListLabels"
+></app-ag-grid-table>

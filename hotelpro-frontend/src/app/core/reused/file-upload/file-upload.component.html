@@ -1,0 +1,41 @@
+<ngx-file-drop
+  (onFileDrop)="droppedFiles($event)"
+  dropZoneClassName="my-style"
+  contentClassName="my-style"
+  [accept]="acceptTypes"
+  [multiple]="multiple"
+>
+  <ng-template
+    ngx-file-drop-content-tmp
+    let-openFileSelector="openFileSelector"
+  >
+    <button type="button" class="btn btn-primary" (click)="openFileSelector()">
+      Select
+    </button>
+  </ng-template>
+</ngx-file-drop>
+<div class="d-flex">
+  @for (preview of filePreviews; track preview; let i = $index) {
+  <div style="position: relative">
+    <img
+      [src]="preview"
+      alt="File Preview"
+      style="width: 300px; height: 200px"
+    />
+
+    <i
+      class="material-symbols-rounded text-danger"
+      (click)="removeFile(i)"
+      style="position: absolute; right: 4px; background: white; cursor: pointer"
+    >
+      cancel
+    </i>
+  </div>
+  }
+</div>
+@if(fileError){
+<div class="error">{{ fileError }}</div>
+} @if(!fileError && files.length > 0){
+
+<button (click)="uploadFiles()" class="btn btn-primary mt-3">Upload</button>
+}

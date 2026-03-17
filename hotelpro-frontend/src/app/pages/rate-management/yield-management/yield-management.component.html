@@ -1,0 +1,386 @@
+<div class="row mt-4">
+    <div class="col-lg-8 col-md-8 col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="align-content-center">Yields</div>
+                <div class="btn btn-success button" (click)="openModalCreateYield(addYield)">
+                    Create Yield
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Start date</th>
+                            <th scope="col">End date</th>
+                            <th scope="col">Rate plan</th>
+                            <th scope="col">Room type</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let yield of yieldData; let i = index" (click)="selectYield(yield, i)"
+                            [ngClass]="{ selected: selectedYieldIndex === i }" style="cursor: pointer">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ yield.yieldName }}</td>
+                            <td>{{ yield.startDate | date : "dd-MM-yyyy" }}</td>
+                            <td>{{ yield.endDate | date : "dd-MM-yyyy" }}</td>
+                            <td>{{ yield?.ratePlanDetail?.ratePlanName }}</td>
+                            <td>{{ getRoomTypeNames(yield.roomTypes) }}</td>
+                            <td>{{ yield.active ? "Active" : "Deactive" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <div *ngIf="yieldData?.length > 0" class="card">
+            <div class="card-header">Yield Details</div>
+            <div class="card-body">
+                <form [formGroup]="yieldForm">
+                    <table class="table table-sm table-borderless add_table">
+                        <tr>
+                            <td>
+                                <div class="mt-1">Start Date*:</div>
+                            </td>
+                            <td>
+                                <input type="date" class="form-control field" formControlName="startDate" />
+                                <p class="text-danger" *ngIf="
+                                  yieldForm.controls['startDate'].touched &&
+                                  yieldForm.controls['startDate'].invalid
+                                ">
+                                    Enter valid Date!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="mt-1">End Date*:</div>
+                            </td>
+                            <td>
+                                <input type="date" class="form-control field" formControlName="endDate"/>
+                                <p class="text-danger" *ngIf="
+                                  yieldForm.controls['endDate'].touched &&
+                                  yieldForm.controls['endDate'].invalid
+                                ">
+                                    Enter valid Date!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="custom_label">
+                                <div>Yield Name* :</div>
+                            </td>
+                            <td>
+                                <input type="text" formControlName="yieldName" class="form-control field" [ngClass]="{
+                                            'is-invalid':
+                                            yieldForm.get('yieldName')?.invalid &&
+                                            (yieldForm.get('yieldName')?.dirty ||
+                                                yieldForm.get('yieldName')?.touched)
+                                        }" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="custom_label">
+                                <div>Description :</div>
+                            </td>
+                            <td>
+                                <input type="text" formControlName="yieldDescription" class="form-control field"
+                                    [ngClass]="{
+                                            'is-invalid':
+                                            yieldForm.get('yieldDescription')?.invalid &&
+                                            (yieldForm.get('yieldDescription')?.dirty ||
+                                                yieldForm.get('yieldDescription')?.touched)
+                                        }" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="mt-1">Rate Plan* :</div>
+                            </td>
+                            <td>
+                                <div>
+                                    <select id="options" formControlName="ratePlanSetupId" class="form-control"
+                                        style="appearance: auto">
+                                        <option *ngFor="let item of RatePlanList" [value]="item.item_id">
+                                            {{ item.item_text }}
+                                        </option>
+                                    </select>
+                                    <small class="text-danger" *ngIf="
+                                        yieldForm.get('ratePlanSetupId')?.invalid &&
+                                        yieldForm.get('ratePlanSetupId')?.touched
+                                    ">
+                                        Room type is required
+                                    </small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="custom_label">
+                                <div>Room Type* :</div>
+                            </td>
+                            <td>
+                                <ng-multiselect-dropdown name="roomtype" [placeholder]="'Select Roomtype'" [settings]="{
+                                    singleSelection: false,
+                                    idField: 'roomTypeId',
+                                    textField: 'roomTypeName',
+                                    selectAllText: 'Select All',
+                                    unSelectAllText: 'UnSelect All',
+                                    itemsShowLimit: 2,
+                                    allowSearchFilter: true
+                                }" [data]="RoomTypes" formControlName="roomTypeIds" class="multiselect_dropdown">
+                                </ng-multiselect-dropdown>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="custom_label">
+                                <div>Occupancy Range* :</div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between p-0">
+                                    <div>
+                                        <input type="number" formControlName="occupancyRangeStart"
+                                            class="form-control field" placeholder="0" [min]="0" [ngClass]="{
+                                            'is-invalid':
+                                            yieldForm.get('occupancyRangeStart')?.invalid &&
+                                            (yieldForm.get('occupancyRangeStart')?.dirty ||
+                                                yieldForm.get('occupancyRangeStart')?.touched)
+                                        }" />
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        To(%)
+                                    </div>
+                                    <div>
+                                        <input type="number" formControlName="occupancyRangeEnd"
+                                            class="form-control field" placeholder="0" [min]="0" [ngClass]="{
+                                            'is-invalid':
+                                            yieldForm.get('occupancyRangeEnd')?.invalid &&
+                                            (yieldForm.get('occupancyRangeEnd')?.dirty ||
+                                                yieldForm.get('occupancyRangeEnd')?.touched)
+                                        }" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="custom_label">
+                                <div>Rate Change* :</div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between p-0">
+                                    <div style="width: 86%;">
+                                        <select class="form-control" id="active" formControlName="changeType">
+                                            <option [value]="'percentage'">Percentage</option>
+                                            <option [value]="'flat'">Flat</option>
+                                        </select>
+                                    </div>
+                                    <div class="ms-2">
+                                        <input type="number" formControlName="changeValue" class="form-control field"
+                                            placeholder="0" [min]="0" [ngClass]="{
+                                            'is-invalid':
+                                            yieldForm.get('changeValue')?.invalid &&
+                                            (yieldForm.get('changeValue')?.dirty ||
+                                                yieldForm.get('changeValue')?.touched)
+                                        }" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="custom_label">
+                                <div>Status :</div>
+                            </td>
+                            <td>
+                                <select class="form-control" id="active" formControlName="active">
+                                    <option [value]="true">Active</option>
+                                    <option [value]="false">Deactive</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="d-flex justify-content-center pb-3">
+                        <button class="btn light_button button" (click)="ngOnInit()">
+                            CANCEL
+                        </button>
+                        <button class="btn btn-success button ms-2" [disabled]="!yieldForm.valid"
+                            (click)="updateYield()">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #addYield let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Create yield</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss(false)"></button>
+    </div>
+    <form [formGroup]="createYieldForm" class="px-2 mt-2 fix_height">
+        <table class="table table-sm table-borderless add_table">
+            <tr>
+                <td>
+                    <div class="mt-1">Start Date*:</div>
+                </td>
+                <td>
+                    <input type="date" class="form-control field" formControlName="startDate" [min]="Today"
+                        (input)="getTomorrow()" />
+                    <p class="text-danger" *ngIf="
+                      createYieldForm.controls['startDate'].touched &&
+                      createYieldForm.controls['startDate'].invalid
+                    ">
+                        Enter valid Date!
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="mt-1">End Date*:</div>
+                </td>
+                <td>
+                    <input type="date" class="form-control field" formControlName="endDate" [min]="Tomorrow" />
+                    <p class="text-danger" *ngIf="
+                      createYieldForm.controls['endDate'].touched &&
+                      createYieldForm.controls['endDate'].invalid
+                    ">
+                        Enter valid Date!
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="custom_label">
+                    <div>Yield Name* :</div>
+                </td>
+                <td>
+                    <input type="text" formControlName="yieldName" class="form-control field" [ngClass]="{
+                                'is-invalid':
+                                createYieldForm.get('yieldName')?.invalid &&
+                                (createYieldForm.get('yieldName')?.dirty ||
+                                    createYieldForm.get('yieldName')?.touched)
+                            }" />
+                </td>
+            </tr>
+            <tr>
+                <td class="custom_label">
+                    <div>Description :</div>
+                </td>
+                <td>
+                    <input type="text" formControlName="yieldDescription" class="form-control field" [ngClass]="{
+                                'is-invalid':
+                                createYieldForm.get('yieldDescription')?.invalid &&
+                                (createYieldForm.get('yieldDescription')?.dirty ||
+                                    createYieldForm.get('yieldDescription')?.touched)
+                            }" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="mt-1">Rate Plan* :</div>
+                </td>
+                <td>
+                    <div>
+                        <select id="options" formControlName="ratePlanSetupId" class="form-control"
+                            style="appearance: auto">
+                            <option *ngFor="let item of RatePlanList" [value]="item.item_id">
+                                {{ item.item_text }}
+                            </option>
+                        </select>
+                        <small class="text-danger" *ngIf="
+                            createYieldForm.get('ratePlanSetupId')?.invalid &&
+                            createYieldForm.get('ratePlanSetupId')?.touched
+                        ">
+                            Room type is required
+                        </small>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="custom_label">
+                    <div>Room Type* :</div>
+                </td>
+                <td>
+                    <ng-multiselect-dropdown name="roomtype" [placeholder]="'Select Roomtype'" [settings]="{
+                        singleSelection: false,
+                        idField: 'roomTypeId',
+                        textField: 'roomTypeName',
+                        selectAllText: 'Select All',
+                        unSelectAllText: 'UnSelect All',
+                        itemsShowLimit: 2,
+                        allowSearchFilter: true
+                    }" [data]="RoomTypes" formControlName="roomTypeIds" class="multiselect_dropdown">
+                    </ng-multiselect-dropdown>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="custom_label">
+                    <div>Occupancy Range* :</div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-between p-0">
+                        <div>
+                            <input type="number" formControlName="occupancyRangeStart" class="form-control field"
+                                placeholder="0" [min]="0" [ngClass]="{
+                                'is-invalid':
+                                createYieldForm.get('occupancyRangeStart')?.invalid &&
+                                (createYieldForm.get('occupancyRangeStart')?.dirty ||
+                                    createYieldForm.get('occupancyRangeStart')?.touched)
+                            }" />
+                        </div>
+                        <div class="d-flex align-items-center">
+                            To(%)
+                        </div>
+                        <div>
+                            <input type="number" formControlName="occupancyRangeEnd" class="form-control field"
+                                placeholder="0" [min]="0" [ngClass]="{
+                                'is-invalid':
+                                createYieldForm.get('occupancyRangeEnd')?.invalid &&
+                                (createYieldForm.get('occupancyRangeEnd')?.dirty ||
+                                    createYieldForm.get('occupancyRangeEnd')?.touched)
+                            }" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="custom_label">
+                    <div>Rate Change* :</div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-between p-0">
+                        <div style="width: 70%;">
+                            <select class="form-control" id="active" formControlName="changeType">
+                                <option [value]="'percentage'">Percentage</option>
+                                <option [value]="'flat'">Flat</option>
+                            </select>
+                        </div>
+                        <div class="ms-2">
+                            <input type="number" formControlName="changeValue" class="form-control field"
+                                placeholder="0" [min]="0" [ngClass]="{
+                                'is-invalid':
+                                createYieldForm.get('changeValue')?.invalid &&
+                                (createYieldForm.get('changeValue')?.dirty ||
+                                    createYieldForm.get('changeValue')?.touched)
+                            }" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex justify-content-center pb-3">
+            <button class="btn light_button button" (click)="modal.close('Close click')">
+                CANCEL
+            </button>
+            <button class="btn btn-success button ms-2" [disabled]="!createYieldForm.valid" (click)="createYield()">
+                Save
+            </button>
+        </div>
+    </form>
+</ng-template>

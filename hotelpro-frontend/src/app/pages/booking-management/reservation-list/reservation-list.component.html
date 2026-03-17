@@ -1,0 +1,70 @@
+<div class="container-fluid my-4">
+  <div class="d-flex">
+    <div class="input_container">
+      <input type="text" class="form-control field search" (input)="search($event)" placeholder="Search" />
+      <div class="input_img">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-search"
+          viewBox="0 0 16 16">
+          <path
+            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+        </svg>
+      </div>
+    </div>
+    <div class="ms-4 d-flex align-items-center">
+      <div>Filter :</div>
+      <div class="ms-1">
+        <select id="options" class="form-control" style="appearance: auto" (change)="filterByReservationStatus($event)">
+          <option value="all">All</option>
+          <option value="arrival">Arrival</option>
+          <option value="departure">Departure</option>
+          <option value="inhouse">In house</option>
+          <option value="reserved">Reservation</option>
+          <option value="cancelled">Cancellation</option>
+          <option value="checkedout">Checked out</option>
+          <option value="noshow">No show</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+  <div class="row my-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">Reservation</div>
+        <div class="card-body">
+          <table class="table text-center">
+            <thead>
+              <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Confirmation No.</th>
+                <th scope="col">Room Type</th>
+                <th scope="col">Room No.</th>
+                <th scope="col">Status</th>
+                <th scope="col">Arrival</th>
+                <th scope="col">Departure</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let reservation of reservationData; let i = index">
+                <tr *ngIf="reservation.Show" style="cursor: pointer"
+                  [routerLink]="'/guest-folio/' + reservation.groupId">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    {{ reservation.firstName }} {{ reservation.lastName }}
+                  </td>
+                  <td>{{ reservation.confirmationNumber }}</td>
+                  <td>{{ reservation.roomType }}</td>
+                  <td>{{ reservation.roomName }}</td>
+                  <td>{{ reservation.reservationStatus | status }}</td>
+                  <td>{{ reservation.arrival | date : "dd/MM/yyyy" }}</td>
+                  <td>{{ reservation.departure | date : "dd/MM/yyyy" }}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

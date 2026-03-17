@@ -1,0 +1,253 @@
+<div class="container container_form my-3 rounded">
+  <form [formGroup]="groupForm">
+    <div class="row row-cols-1 row-cols-md-2">
+      <div class="col mt-3">
+        <label class="form-label">CheckIn Date</label>
+        <input
+          type="date"
+          class="form-control"
+          formControlName="arrival"
+          [min]="Today"
+          (input)="setDeparture()"
+          placeholder="Enter arrival"
+          [ngClass]="{
+            'is-invalid':
+              groupForm.get('arrival')?.invalid &&
+              (groupForm.get('arrival')?.dirty ||
+                groupForm.get('arrival')?.touched)
+          }"
+          readonly
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            groupForm.get('arrival')?.invalid &&
+            (groupForm.get('arrival')?.dirty ||
+              groupForm.get('arrival')?.touched)
+          "
+        >
+          Arrival is required
+        </small>
+      </div>
+      <div class="col mt-3">
+        <label class="form-label">Checkout Date</label>
+        <input
+          type="date"
+          class="form-control"
+          [min]="nextDate()"
+          formControlName="departure"
+          (input)="resetGuestTotals()"
+          placeholder="Enter departure"
+          [ngClass]="{
+            'is-invalid':
+              groupForm.get('departure')?.invalid &&
+              (groupForm.get('departure')?.dirty ||
+                groupForm.get('departure')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            groupForm.get('departure')?.invalid &&
+            (groupForm.get('departure')?.dirty ||
+              groupForm.get('departure')?.touched)
+          "
+        >
+          Departure is required
+        </small>
+      </div>
+      <div class="col mt-3">
+        <label class="form-label">Adults</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="adults"
+          placeholder="Enter adults"
+          [ngClass]="{
+            'is-invalid':
+              groupForm.get('adults')?.invalid &&
+              (groupForm.get('adults')?.dirty ||
+                groupForm.get('adults')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            groupForm.get('adults')?.invalid &&
+            (groupForm.get('adults')?.dirty || groupForm.get('adults')?.touched)
+          "
+        >
+          Adults is required
+        </small>
+      </div>
+      <div class="col mt-3">
+        <label class="form-label">Children</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="childs"
+          placeholder="Enter children"
+          [ngClass]="{
+            'is-invalid':
+              groupForm.get('childs')?.invalid &&
+              (groupForm.get('childs')?.dirty ||
+                groupForm.get('childs')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            groupForm.get('childs')?.invalid &&
+            (groupForm.get('childs')?.dirty || groupForm.get('childs')?.touched)
+          "
+        >
+          Children is required
+        </small>
+      </div>
+      <div class="col my-3">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="readRooms()"
+          [disabled]="groupForm.invalid"
+        >
+          Show Availability
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container-fluid text-center" *ngIf="roomsData.length > 0">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Room Type Name</th>
+        <th>Available Rooms</th>
+        <th>Sleeps</th>
+        <th>Rate</th>
+        <th>Cost</th>
+        <th>Room</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of roomsData; let i = index; trackBy: trackByFn">
+        <td>{{ room.roomtype }} {{ room.rateName }}</td>
+        <td>{{ room.totalRoom }}</td>
+        <td>
+          {{ room.adultOccupant }} Adults {{ room.childOccupant }} Childs
+          <span
+            class="link text-primary"
+            (click)="openExtraModal(extraGuests, room)"
+          >
+            @if( room.extraAdults == 0 && room.extraChilds == 0 ){
+            <i class="material-symbols-rounded">person_add</i>
+            }@else {
+            {{ "(" + room.extraAdults + "/" + room.extraChilds + ")" }}
+            }
+          </span>
+        </td>
+        <td>{{ room?.roomPrice?.toFixed(2) }}</td>
+        <td>{{ room?.roomCost?.toFixed(2) }}</td>
+
+        <td>
+          <ng-multiselect-dropdown
+            name="roomtype"
+            [placeholder]="'Select Room'"
+            [settings]="room.dropdownSettings"
+            [data]="dropDownData(room.rooms, i)"
+            [(ngModel)]="selectedItems[i]"
+            (onSelect)="onItemSelect($event, i)"
+            (onDeSelect)="onItemDeSelect($event, i)"
+            class="multiselect_dropdown"
+          ></ng-multiselect-dropdown>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container text-center" *ngIf="roomsData.length > 0">
+  <button
+    class="btn btn-primary my-3"
+    (click)="onSubmit()"
+    [disabled]="
+      totalGuests?.adults + totalGuests?.childs <
+      groupForm.get('adults')?.value + groupForm.get('childs')?.value
+    "
+  >
+    Next
+    <ng-container
+      *ngIf="
+        totalGuests?.adults + totalGuests?.childs >=
+        groupForm.get('adults')?.value + groupForm.get('childs')?.value
+      "
+    >
+      (Total Cost {{ groupForm.get("totalCost")?.value?.toFixed(2) }})
+    </ng-container>
+  </button>
+</div>
+
+<ng-template #extraGuests let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Adults/Children</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Guests</th>
+          <th scope="col">Rate</th>
+          <th>Number of Extras</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Adults</th>
+          <td>{{ extraGuestsData.adultRate }}</td>
+          <td>
+            <select
+              class="form-control text-center select_reason"
+              [(ngModel)]="extraGuestsData.extraAdults"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Children</th>
+          <td>{{ extraGuestsData.childRate }}</td>
+          <td>
+            <select
+              class="form-control text-center select_reason"
+              [(ngModel)]="extraGuestsData.extraChilds"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.close(true)"
+    >
+      Save
+    </button>
+  </div>
+</ng-template>

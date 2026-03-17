@@ -1,0 +1,307 @@
+<div class="p-2" style="background-color: #f1f8ff">
+  <div class="mx-3 d-flex mt-4 bg-white">
+    <div class="w-100 d-flex mx-3 justify-content-between">
+      <div class="d-flex my-2 align-items-center">
+        <div class="black_font">Rate Plan :</div>
+        <div class="ms-1">
+          <select
+            id="options"
+            [(ngModel)]="RatePlanId"
+            class="form-control"
+            style="appearance: auto"
+          >
+            <option *ngFor="let item of ratePlanList" [value]="item._id">
+              {{ item.ratePlanName }}
+            </option>
+          </select>
+        </div>
+        <div class="black_font ms-3">Start Date :</div>
+        <div class="ms-1">
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="Date"
+            [min]="Max"
+          />
+        </div>
+
+        <div class="black_font align-items-center ms-3">Week :</div>
+        <div class="input_container ms-1">
+          <input
+            type="number"
+            class="input form-control field text-center hide-spinner"
+            [(ngModel)]="Week"
+            [min]="2"
+          />
+
+          <div class="input_img" (click)="add()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="22"
+              fill="currentColor"
+              class="bi bi-plus-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+              />
+            </svg>
+          </div>
+          <div class="input_img1" (click)="sub()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="22"
+              fill="currentColor"
+              class="bi bi-dash-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="ms-3">
+          <button class="btn btn-success button w-auto" (click)="fetchdata()">
+            Find
+          </button>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="d-flex">
+          <div class="d-flex ms-2 align-items-center">
+            <div class="black_font">Filter :</div>
+          </div>
+          <div class="ms-2 align-self-center" style="width: 200px !important">
+            <ng-multiselect-dropdown
+              name="roomtype"
+              [placeholder]="'Select Room Type'"
+              [settings]="dropdownSettings"
+              [data]="dropdownList"
+              [(ngModel)]="selectedItems"
+              style="font-size: 13px !important; background: white !important"
+              (onSelect)="filterRoom()"
+              (onDeSelect)="filterRoom()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+          <div class="d-flex justify-content-right ms-4">
+            <div class="align-self-center d-flex">
+              <div class="yield px-2">Yield Apply</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mx-3 mt-4 inline2 pb-3">
+    <div class="col-12 pl-0">
+      <div
+        style="
+          overflow-x: auto;
+          border-right: 1px solid rgba(0, 0, 0, 0.1);
+          max-height: 600px !important;
+        "
+        id="scroll"
+      >
+        <table
+          class="table-bordered global_table"
+          style="overflow-x: hidden !important"
+        >
+          <thead>
+            <th style="z-index: 101">Room Type</th>
+            <th *ngFor="let item of DateArr; let i = index">
+              {{ item | date : "dd MMM" }} <br />
+            </th>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of RoomData; let i = index">
+              <tr *ngIf="item.Show">
+                <td style="z-index: 10">{{ item.roomTypeName }}</td>
+                <td *ngFor="let d of item.dailyRates; let k = index">
+                  <div [ngClass]="{ yield: d?.yieldApplied }">
+                    {{ d?.baseRate }}
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ms-3 d-flex justify-content-center">
+    <button
+      class="ms-3 btn btn-primary button w-auto"
+      (click)="openRangeUpdateModal(Range)"
+    >
+      Change Rate
+    </button>
+  </div>
+</div>
+
+<ng-template #Range let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Change Rate</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss(false)"
+    ></button>
+  </div>
+
+  <form [formGroup]="changeRateForm" class="px-2 mt-2">
+    <table class="table table-sm table-borderless add_table">
+      <tr>
+        <td class="black_font">
+          <div class="mt-2">Start Date :</div>
+        </td>
+        <td>
+          <input
+            type="date"
+            class="form-control"
+            [min]="Max"
+            formControlName="startDate"
+            (input)="checkDates()"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              changeRateForm.get('startDate')?.invalid &&
+              changeRateForm.get('startDate')?.touched
+            "
+          >
+            Please enter valid start date
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td class="black_font">
+          <div class="mt-2">End Date :</div>
+        </td>
+        <td>
+          <input
+            type="date"
+            class="form-control"
+            [min]="changeRateForm.controls['endDate'].value"
+            formControlName="endDate"
+            (input)="checkDates()"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              changeRateForm.get('endDate')?.invalid &&
+              changeRateForm.get('endDate')?.touched
+            "
+          >
+            Please enter valid end date
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="mt-1">Room Type*:</div>
+        </td>
+        <td>
+          <div>
+            <select
+              id="options"
+              formControlName="roomType"
+              class="form-control"
+              style="appearance: auto"
+            >
+              <option
+                *ngFor="let item of dropdownList"
+                [value]="item.item_text"
+              >
+                {{ item.item_text }}
+              </option>
+            </select>
+            <small
+              class="text-danger"
+              *ngIf="
+                changeRateForm.get('roomType')?.invalid &&
+                changeRateForm.get('roomType')?.touched
+              "
+            >
+              Room type is required
+            </small>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="black_font">
+          <div class="mt-2">New Rate:</div>
+        </td>
+        <td>
+          <input
+            type="number"
+            class="form-control"
+            [min]="0"
+            formControlName="newRate"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              changeRateForm.get('newRate')?.invalid &&
+              changeRateForm.get('newRate')?.touched
+            "
+          >
+            Please enter valid rate
+          </small>
+        </td>
+      </tr>
+      <!-- <tr>
+                <td class="black_font">
+                    <div class="mt-2">Room Type:</div>
+                </td>
+                <td>
+                    <div class="d-flex">
+                        <div class="select1">
+                            <select class="form-control" formControlName="RoomType" (change)="changeRoomType()">
+                                <option value="">Select RoomType</option>
+                                <option *ngFor="let item of RateDetails; let i = index" [value]="item.RoomTypeName">
+                                    {{ item.RoomTypeName }}
+                                </option>
+                            </select>
+                            <div class="select1__arrow"></div>
+                            <p class="error" *ngIf="
+                      changeRateForm.controls['RoomType'].touched &&
+                      changeRateForm.controls['RoomType'].invalid
+                    ">
+                                select valid room type!
+                            </p>
+                        </div>
+                        <div class="ml-1">
+                            <img class="icon" src="../../../../assets/images/addition.png" (click)="addType()" />
+                        </div>
+                        <div class="ml-1">
+                            <img class="icon" (click)="removeType()" src="../../../../assets/images/subtract.png" />
+                        </div>
+                    </div>
+                </td>
+            </tr> -->
+    </table>
+  </form>
+
+  <div class="d-flex justify-content-center">
+    <button
+      class="btn btn-success my-2"
+      (click)="changeRate()"
+      [disabled]="changeRateForm.invalid"
+    >
+      Save
+    </button>
+  </div>
+</ng-template>

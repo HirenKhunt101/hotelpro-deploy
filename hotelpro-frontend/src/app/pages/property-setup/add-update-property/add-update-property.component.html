@@ -1,0 +1,418 @@
+<div class="row g-0">
+  <div class="col-9 ps-5 pe-3">
+    <div class="container container_form my-3 rounded">
+      <form
+        [formGroup]="propertyUnitForm"
+        (ngSubmit)="onSubmit()"
+        class="row row-cols-1 row-cols-md-2"
+      >
+        <!-- Property Unit Name -->
+        <div class="col mt-3">
+          <label class="form-label">Property Unit Name*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="propertyUnitName"
+            placeholder="Enter Property Unit Name"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyUnitName')?.dirty ||
+                  propertyUnitForm.get('propertyUnitName')?.touched) &&
+                propertyUnitForm.get('propertyUnitName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyUnitName')?.dirty ||
+                propertyUnitForm.get('propertyUnitName')?.touched) &&
+              propertyUnitForm.get('propertyUnitName')?.invalid
+            "
+            >Property Unit Name is required</small
+          >
+        </div>
+
+        <!-- Property Unit Legal Name -->
+        <div class="col mt-3">
+          <label class="form-label">Property Unit Legal Name*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="propertyUnitLegalName"
+            placeholder="Enter Property Unit Legal Name"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyUnitLegalName')?.dirty ||
+                  propertyUnitForm.get('propertyUnitLegalName')?.touched) &&
+                propertyUnitForm.get('propertyUnitLegalName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyUnitLegalName')?.dirty ||
+                propertyUnitForm.get('propertyUnitLegalName')?.touched) &&
+              propertyUnitForm.get('propertyUnitLegalName')?.invalid
+            "
+            >Property Unit Legal Name is required</small
+          >
+        </div>
+
+        <!-- Property Unit Type -->
+        <div class="col mt-3">
+          <label class="form-label">Property Unit Type</label>
+          <div>
+            <select
+              id="options"
+              formControlName="propertyUnitType"
+              class="form-control"
+              style="appearance: auto"
+            >
+              <option *ngFor="let option of PropertyTypes" [value]="option">
+                {{ option }}
+              </option>
+            </select>
+          </div>
+
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyUnitType')?.dirty ||
+                propertyUnitForm.get('propertyUnitType')?.touched) &&
+              propertyUnitForm.get('propertyUnitType')?.invalid
+            "
+            >Property Unit Type is required</small
+          >
+        </div>
+
+        <!-- Description -->
+        <div class="col mt-3">
+          <label class="form-label">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="description"
+            placeholder="Enter Description"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('description')?.dirty ||
+                  propertyUnitForm.get('description')?.touched) &&
+                propertyUnitForm.get('description')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('description')?.dirty ||
+                propertyUnitForm.get('description')?.touched) &&
+              propertyUnitForm.get('description')?.invalid
+            "
+            >Description is required</small
+          >
+        </div>
+
+        <!-- Website -->
+        <!-- <div class="col mt-3">
+          <label class="form-label">Website</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="website"
+            placeholder="Enter Website"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('website')?.dirty ||
+                  propertyUnitForm.get('website')?.touched) &&
+                propertyUnitForm.get('website')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('website')?.dirty ||
+                propertyUnitForm.get('website')?.touched) &&
+              propertyUnitForm.get('website')?.invalid
+            "
+            >Website is required</small
+          >
+        </div> -->
+        <div class="col-md-12 mt-4">
+          <label class="form-label fw-semibold">Property Address</label>
+        </div>
+        <!-- Property Address -->
+        <div class="col mt-3" formGroupName="propertyAddress">
+          <label class="form-label">Address Line 1*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressLine1"
+            placeholder="Enter Address Line 1"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyAddress.addressLine1')?.dirty ||
+                  propertyUnitForm.get('propertyAddress.addressLine1')
+                    ?.touched) &&
+                propertyUnitForm.get('propertyAddress.addressLine1')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyAddress.addressLine1')?.dirty ||
+                propertyUnitForm.get('propertyAddress.addressLine1')
+                  ?.touched) &&
+              propertyUnitForm.get('propertyAddress.addressLine1')?.invalid
+            "
+            >Address Line 1 is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="propertyAddress">
+          <label class="form-label">Address Line 2</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressLine2"
+            placeholder="Enter Address Line 2"
+          />
+        </div>
+
+        <div class="col mt-3" formGroupName="propertyAddress">
+          <label class="form-label">City*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="city"
+            placeholder="Enter City"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyAddress.city')?.dirty ||
+                  propertyUnitForm.get('propertyAddress.city')?.touched) &&
+                propertyUnitForm.get('propertyAddress.city')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyAddress.city')?.dirty ||
+                propertyUnitForm.get('propertyAddress.city')?.touched) &&
+              propertyUnitForm.get('propertyAddress.city')?.invalid
+            "
+            >City is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="propertyAddress">
+          <label class="form-label">State*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="state"
+            placeholder="Enter State"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyAddress.state')?.dirty ||
+                  propertyUnitForm.get('propertyAddress.state')?.touched) &&
+                propertyUnitForm.get('propertyAddress.state')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyAddress.state')?.dirty ||
+                propertyUnitForm.get('propertyAddress.state')?.touched) &&
+              propertyUnitForm.get('propertyAddress.state')?.invalid
+            "
+            >State is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="propertyAddress">
+          <label class="form-label">Country*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="country"
+            placeholder="Enter Country"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyAddress.country')?.dirty ||
+                  propertyUnitForm.get('propertyAddress.country')?.touched) &&
+                propertyUnitForm.get('propertyAddress.country')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('propertyAddress.country')?.dirty ||
+                propertyUnitForm.get('propertyAddress.country')?.touched) &&
+              propertyUnitForm.get('propertyAddress.country')?.invalid
+            "
+            >Country is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="propertyAddress">
+          <label class="form-label">Zip Code*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="zipCode"
+            placeholder="Enter Zip Code"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('propertyAddress.zipCode')?.dirty ||
+                  propertyUnitForm.get('propertyAddress.zipCode')?.touched) &&
+                propertyUnitForm.get('propertyAddress.zipCode')?.invalid
+            }"
+          />
+          <div
+            *ngIf="
+              propertyUnitForm.get('propertyAddress.zipCode')?.invalid &&
+              (propertyUnitForm.get('propertyAddress.zipCode')?.dirty ||
+                propertyUnitForm.get('propertyAddress.zipCode')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="propertyUnitForm.get('propertyAddress.zipCode')?.errors?.['required']"
+              >ZIP Code is required. <br />
+            </small>
+            <small
+              class="text-danger"
+              *ngIf="propertyUnitForm.get('propertyAddress.zipCode')?.errors?.['zipCode']"
+              >ZIP Code must be 6-8 digits long</small
+            >
+          </div>
+        </div>
+        <div class="col-md-12 mt-4">
+          <label class="form-label fw-semibold">Manager Details</label>
+        </div>
+        <!--  Details -->
+        <div class="col mt-3" formGroupName="managerDetails">
+          <label class="form-label"> First Name*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="firstName"
+            placeholder="Enter  First Name"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('managerDetails.firstName')?.dirty ||
+                  propertyUnitForm.get('managerDetails.firstName')?.touched) &&
+                propertyUnitForm.get('managerDetails.firstName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('managerDetails.firstName')?.dirty ||
+                propertyUnitForm.get('managerDetails.firstName')?.touched) &&
+              propertyUnitForm.get('managerDetails.firstName')?.invalid
+            "
+            >First Name is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="managerDetails">
+          <label class="form-label"> Last Name*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="lastName"
+            placeholder="Enter  Last Name"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('managerDetails.lastName')?.dirty ||
+                  propertyUnitForm.get('managerDetails.lastName')?.touched) &&
+                propertyUnitForm.get('managerDetails.lastName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('managerDetails.lastName')?.dirty ||
+                propertyUnitForm.get('managerDetails.lastName')?.touched) &&
+              propertyUnitForm.get('managerDetails.lastName')?.invalid
+            "
+            >Last Name is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="managerDetails">
+          <label class="form-label"> Phone*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="phone"
+            placeholder="Enter  Phone"
+            maxlength="10"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('managerDetails.phone')?.dirty ||
+                  propertyUnitForm.get('managerDetails.phone')?.touched) &&
+                propertyUnitForm.get('managerDetails.phone')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('managerDetails.phone')?.dirty ||
+                propertyUnitForm.get('managerDetails.phone')?.touched) &&
+              propertyUnitForm.get('managerDetails.phone')?.invalid
+            "
+            >Phone is required</small
+          >
+        </div>
+
+        <div class="col mt-3" formGroupName="managerDetails">
+          <label class="form-label"> Email*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="email"
+            placeholder="Enter  Email"
+            [ngClass]="{
+              'is-invalid':
+                (propertyUnitForm.get('managerDetails.email')?.dirty ||
+                  propertyUnitForm.get('managerDetails.email')?.touched) &&
+                propertyUnitForm.get('managerDetails.email')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (propertyUnitForm.get('managerDetails.email')?.dirty ||
+                propertyUnitForm.get('managerDetails.email')?.touched) &&
+              propertyUnitForm.get('managerDetails.email')?.invalid
+            "
+            >Email is required</small
+          >
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-md-12 mt-4">
+          <div class="d-flex justify-content-center">
+            <button class="btn btn-primary mb-3" type="submit">Submit</button>
+            <button
+              type="button"
+              *ngIf="this.propertyUnitId != 'ADD'"
+              class="btn btn-primary mb-3 ms-2"
+              (click)="navigateToRoomSetup()"
+              >Next</button
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-3 px-3">
+    <app-property-sidebar></app-property-sidebar>
+  </div>
+</div>
+
+<!-- <app-file-upload
+  [multiple]="true"
+  [acceptTypes]="'.jpg, .jpeg, .png, .JPG, .JPEG, .PNG'"
+  (onUpload)="getfile($event)"
+></app-file-upload> -->

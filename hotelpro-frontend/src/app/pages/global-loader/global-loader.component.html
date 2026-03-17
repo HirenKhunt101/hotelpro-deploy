@@ -1,0 +1,133 @@
+<div
+  class="p-3 fb-item"
+  [ngClass]="isUserLogin() ? 'login' : ''"
+  *ngIf="loading$ | async"
+>
+  <div class="d-flex" *ngIf="isUserLogin()">
+    <div class="gravatar col-lg-12" style="display: inline-flex">
+      <ngx-skeleton-loader
+        [theme]="{ width: '100px', height: '100px','min-height': '200px','min-width': '200px', 'border-radius': '20px',}"
+      >
+      </ngx-skeleton-loader>
+      <ngx-skeleton-loader
+        count="3"
+        [theme]="{
+          'border-radius': '5px',
+          height: '50px',
+          width: '100%',
+          'animation-duration': '2s'
+        }"
+        class="ms-3 w-100 mt-2"
+      >
+      </ngx-skeleton-loader>
+    </div>
+    <div class="second-section-wrapper">
+      <div class="wrapper">
+        <ngx-skeleton-loader
+          [theme]="{
+            width: '80%',
+            'border-radius': '0',
+            height: '15px',
+            'margin-bottom': '10px'
+          }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div class="wrapper">
+        <ngx-skeleton-loader
+          [theme]="{
+            width: '90%',
+            'border-radius': '0',
+            height: '15px',
+            'margin-bottom': '10px'
+          }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div class="wrapper">
+        <ngx-skeleton-loader
+          [theme]="{
+            width: '60%',
+            'border-radius': '0',
+            height: '15px',
+            'margin-bottom': '10px'
+          }"
+        ></ngx-skeleton-loader>
+        <div class="wrapper">
+          <ngx-skeleton-loader
+            count="3"
+            [theme]="{
+              height: '50px'
+            }"
+          ></ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="first-section-wrapper" *ngIf="isUserLogin()">
+    <div class="gravatar">
+      <ngx-skeleton-loader
+        appearance="circle"
+        [theme]="{ width: '80px', height: '80px' }"
+      >
+      </ngx-skeleton-loader>
+      <ngx-skeleton-loader
+        count="3"
+        [theme]="{
+          'border-radius': '5px',
+          height: '50px',
+          'animation-duration': '2s'
+        }"
+      >
+      </ngx-skeleton-loader>
+    </div>
+    <div class="gravatar-title">
+      <div>
+        <ngx-skeleton-loader
+          [theme]="{
+            width: '200px',
+            'border-radius': '0',
+            height: '15px',
+            'margin-bottom': '10px'
+          }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div>
+        <ngx-skeleton-loader
+          [theme]="{ width: '170px', 'border-radius': '0', height: '15px' }"
+        >
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="!isUserLogin()"
+    style="
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    "
+  >
+    <div class="spinner-grow text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-info" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>

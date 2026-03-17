@@ -1,0 +1,214 @@
+<div class="row mt-4">
+  <div class="col-lg-8 col-md-8 col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <div class="align-content-center">Users</div>
+        <div class="btn btn-success button" (click)="openModalAddUser(AddUser)">
+          Create User
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">Email</th>
+              <th scope="col">Type</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of userData; let i = index" (click)="selectUser(user, i)"
+              [ngClass]="{ selected: selectedUserIndex === i }" style="cursor: pointer">
+              <td>{{ i + 1 }}</td>
+              <td>{{ user.firstName }} {{ user.lastName }}</td>
+              <td>{{ user.phone }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.userType }}</td>
+              <td>{{ user.isLoginable ? "Active" : "Deactive" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 col-md-4 col-sm-12">
+    <div class="card">
+      <div class="card-header">User Details</div>
+      <div class="card-body">
+        <form [formGroup]="userForm">
+          <table class="table">
+            <tr>
+              <td>First Name</td>
+              <td>
+                <input type="text" class="form-control" formControlName="firstName" />
+              </td>
+            </tr>
+            <tr>
+              <td>Last Name</td>
+              <td>
+                <input type="text" class="form-control" formControlName="lastName" />
+              </td>
+            </tr>
+            <tr>
+              <td>Phone</td>
+              <td>
+                <input type="text" class="form-control" formControlName="phone" maxlength="10" />
+              </td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>
+                <input type="text" class="form-control" formControlName="email" />
+              </td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td>
+                <select class="form-control" id="active" formControlName="active">
+                  <option [value]="true">Active</option>
+                  <option [value]="false">Deactive</option>
+                </select>
+              </td>
+            </tr>
+            <tr *ngIf="userForm.get('userType')?.value == 'manager'">
+              <td>Property</td>
+              <td>
+                <ng-multiselect-dropdown name="roomtype" [placeholder]="'Select Property'" [settings]="{
+                    singleSelection: false,
+                    idField: '_id',
+                    textField: 'propertyUnitName',
+                    selectAllText: 'Select All',
+                    unSelectAllText: 'UnSelect All',
+                    itemsShowLimit: 2,
+                    allowSearchFilter: true
+                  }" [data]="clientInfo.propertyUnits" formControlName="propertyUnits"
+                  class="multiselect_dropdown"></ng-multiselect-dropdown>
+              </td>
+            </tr>
+          </table>
+          <button type="submit" class="btn btn-primary" (click)="updateUser()">
+            Update User
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #AddUser let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create user</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss(false)"></button>
+  </div>
+  <form [formGroup]="createUserForm" class="px-2 mt-2 fix_height">
+    <table class="table table-sm table-borderless add_table">
+      <tr>
+        <td class="custom_label">
+          <div>Category* :</div>
+        </td>
+        <td>
+          <select class="form-control" id="active" formControlName="userType">
+            <option [value]="'frontdesk'">Frontdesk</option>
+            <option [value]="'manager'" *ngIf="clientInfo.userType == 'client'">
+              Manager
+            </option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="custom_label">
+          <div>Name* :</div>
+        </td>
+        <td>
+          <div class="d-flex justify-content-between p-0">
+            <div>
+              <input type="text" formControlName="firstName" class="form-control field" placeholder="First Name"
+                [ngClass]="{
+                  'is-invalid':
+                    createUserForm.get('firstName')?.invalid &&
+                    (createUserForm.get('firstName')?.dirty ||
+                      createUserForm.get('firstName')?.touched)
+                }" />
+            </div>
+
+            <div>
+              <input type="text" formControlName="lastName" class="form-control field" placeholder="Last Name"
+                [ngClass]="{
+                  'is-invalid':
+                    createUserForm.get('lastName')?.invalid &&
+                    (createUserForm.get('lastName')?.dirty ||
+                      createUserForm.get('lastName')?.touched)
+                }" />
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="custom_label">
+          <div>Email* :</div>
+        </td>
+        <td>
+          <input type="email" formControlName="email" class="form-control field" [ngClass]="{
+              'is-invalid':
+                createUserForm.get('email')?.invalid &&
+                (createUserForm.get('email')?.dirty ||
+                  createUserForm.get('email')?.touched)
+            }" />
+        </td>
+      </tr>
+      <tr>
+        <td class="custom_label">
+          <div>Contact Number* :</div>
+        </td>
+        <td>
+          <input type="text" class="form-control" formControlName="phone" maxlength="10" [ngClass]="{
+              'is-invalid':
+                (createUserForm.get('phone')?.dirty ||
+                  createUserForm.get('phone')?.touched) &&
+                createUserForm.get('phone')?.invalid
+            }" />
+        </td>
+      </tr>
+      <tr *ngIf="createUserForm.get('userType')?.value == 'manager'">
+        <td class="custom_label">Property</td>
+        <td>
+          <ng-multiselect-dropdown name="roomtype" [placeholder]="'Select Property'" [settings]="{
+              singleSelection: false,
+              idField: '_id',
+              textField: 'propertyUnitName',
+              selectAllText: 'Select All',
+              unSelectAllText: 'UnSelect All',
+              itemsShowLimit: 2,
+              allowSearchFilter: true
+            }" [data]="clientInfo.propertyUnits" formControlName="propertyUnits"
+            class="multiselect_dropdown"></ng-multiselect-dropdown>
+        </td>
+      </tr>
+      <tr>
+        <td class="custom_label">
+          <div>Password* :</div>
+        </td>
+        <td>
+          <input class="form-control" formControlName="password" [ngClass]="{
+              'is-invalid':
+                createUserForm.get('password')?.invalid &&
+                (createUserForm.get('password')?.dirty ||
+                  createUserForm.get('password')?.touched)
+            }" />
+        </td>
+      </tr>
+    </table>
+    <div class="d-flex justify-content-center pb-3">
+      <button class="btn light_button button" (click)="modal.close('Close click')">
+        CANCEL
+      </button>
+      <button class="btn btn-success button ms-2" [disabled]="!createUserForm.valid" (click)="addUser()">
+        Save
+      </button>
+    </div>
+  </form>
+</ng-template>

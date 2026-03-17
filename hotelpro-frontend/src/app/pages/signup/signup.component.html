@@ -1,0 +1,14 @@
+<button type="button" class="btn btn-primary" (click)="AddDataRecord()">
+  Add Data
+</button>
+<button type="button" class="btn btn-primary" (click)="showAction()">
+  Show Action
+</button>
+<app-data-table
+  [tableData]="sendTableData"
+  [columnArray]="headerTableData"
+  [showActionBtn]="showActionBtn"
+  (onEdit)="getEditItem($event)"
+  (onDelete)="getDeleteItem($event)"
+></app-data-table>
+<a routerLink="/profile">Profilea</a>

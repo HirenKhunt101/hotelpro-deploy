@@ -1,0 +1,72 @@
+<div>
+    <div class="p-2" style="background-color: #f1f8ff;">
+        <div class="mx-3 inline1 mt-4 bg-white">
+            <div class="col-12 inline justify-content-center">
+                <div class="inline1 my-2">
+                    <div class="black_font mt-2">Start Date :</div>
+                    <div class="ms-2">
+                        <input type="date" class="form-control" [(ngModel)]="Date" [min]="Max" />
+                    </div>
+
+                    <div class="black_font mt-2 ms-3">Week :</div>
+                    <div class="input_container ms-2">
+                        <input type="number" class="input form-control field text-center hide-spinner"
+                            [(ngModel)]="Week" [min]="2" />
+
+                        <div class="input_img" (click)="add()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor"
+                                class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                            </svg>
+                        </div>
+                        <div class="input_img1" (click)="sub()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor"
+                                class="bi bi-dash-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ms-3">
+                        <button class="btn btn-success button w-auto" (click)="fetchData()">
+                            Find
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mx-3 mt-4 inline2 pb-3">
+        <div class="col-12 pl-0">
+            <div style="
+        overflow-x: auto;
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        max-height: 600px !important;
+      " id="scroll">
+                <table class="table-bordered global_table" style="overflow-x: hidden !important">
+                    <thead>
+                        <th style="z-index: 101;">
+                            Room Type
+                        </th>
+                        @for (data of availabilityData?.[0]?.Occupancy; track data; let i = $index) {
+                        <th>{{ data.Date | date: "dd MMM" }}</th>
+                        }
+                    </thead>
+                    <tbody>
+                        @for (roomType of availabilityData; track roomType; let i = $index) {
+                        <tr>
+                            <td style="z-index: 10" scope="row" class="text-left">{{ roomType.RoomTypeName }}
+                                ({{roomType.TotalRoom}})</td>
+                            @for (occupancy of availabilityData?.[i]?.Occupancy; track occupancy; let j = $index) {
+                            <td scope="row" class="text-center">{{ occupancy.Available }}</td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

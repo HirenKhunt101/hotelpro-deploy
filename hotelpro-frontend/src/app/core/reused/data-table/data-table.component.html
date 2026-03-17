@@ -1,0 +1,43 @@
+<div>
+    <div class="row">
+        <div class="col-6">
+            <input type="text" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm" [(ngModel)]="searchbox" (input)="onChangeEvent(searchbox)"
+                placeholder="search">
+
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="row">Sr No.</th>
+                <th *ngFor="let c of columnArray" class="col">
+                    <div>
+                        {{c.header}}
+                    </div>
+                </th>
+                <th class="col" *ngIf="showActionBtn">
+                    <div>
+                        Action
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let d of filterData;let i=index; trackBy: trackByFn">
+                <th scope="row">{{i+1}}</th>
+                <td>{{d.name}}</td>
+                <td>{{d.Date}}</td>
+                <td>{{d.car}}</td>
+                <td *ngIf="showActionBtn">
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary" (click)="editRecord(d)">Edit</button>
+                        <button type="button" class="btn btn-danger" (click)="deleteRecord(d)">Delete</button>
+                    </div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

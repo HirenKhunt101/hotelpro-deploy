@@ -1,0 +1,125 @@
+<div class="row g-0">
+  <div class="col-9 ps-5 pe-3">
+<div class="m-3">
+    <button class="btn btn-outline-success" (click)="openTaxForm(taxModal)">
+      Add Tax
+    </button>
+</div>
+
+<div class="container-fluid">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col">Sr. No</th>
+        <th class="col">Tax Name</th>
+        <th class="col">Percentage</th>
+        <th class="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tax of allTaxes; let i = index">
+        <th>{{ i + 1 }}</th>
+        <td>
+          <a
+            (click)="openTaxForm(taxModal, tax)"
+            class="link"
+            style="cursor: pointer"
+          >
+            {{ tax?.taxName }}
+          </a>
+        </td>
+        <td>{{ tax?.taxPercentage }} %</td>
+        <td>{{ tax?.active ? "Active" : "Deactive" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="col-md-12 mb-2">
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-primary ms-2" type="button" (click)="navigateToRateSetup()">
+      Back
+    </button>
+    <button class="btn btn-primary ms-2" type="button" (click)="goToHome()">
+      Home
+    </button>
+  </div>
+</div>
+</div>
+<div class="col-3 px-3">
+  <app-property-sidebar></app-property-sidebar>
+</div>
+</div>
+<ng-template #taxModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{ newTax ? "Add Tax" : "Update Tax" }}
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="taxDetailsForm">
+      <div class="mb-3">
+        <label class="form-label">Tax Name</label>
+        <input
+          type="text"
+          placeholder="Enter Tax Name"
+          class="form-control"
+          formControlName="taxName"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            (taxDetailsForm.get('taxName')?.dirty ||
+              taxDetailsForm.get('taxName')?.touched) &&
+            taxDetailsForm.get('taxName')?.invalid
+          "
+        >
+          Tax Name is required
+        </small>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Tax Percentage(%)</label>
+        <input
+          type="number"
+          placeholder="Enter Tax Percentage"
+          class="form-control"
+          formControlName="taxPercentage"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            (taxDetailsForm.get('taxPercentage')?.dirty ||
+              taxDetailsForm.get('taxPercentage')?.touched) &&
+            taxDetailsForm.get('taxPercentage')?.invalid
+          "
+        >
+          Tax Percentage is required and must be at least 1%
+        </small>
+      </div>
+      <div class="mb-3 form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          formControlName="active"
+        />
+        <label class="form-check-label">Active</label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      [disabled]="taxDetailsForm.invalid"
+      (click)="modal.close(true)"
+    >
+      {{ newTax ? "Save" : "Update" }}
+    </button>
+  </div>
+</ng-template>

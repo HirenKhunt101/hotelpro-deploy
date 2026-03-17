@@ -1,0 +1,646 @@
+<div class="p-2" style="background-color: #f1f8ff">
+  <div class="mx-3 inline1 mt-2 bg-white">
+    <div class="col-12 inline justify-content-center">
+      <div class="inline1 my-2">
+        <div class="black_font mt-2">Start Date :</div>
+        <div class="ms-2">
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="Date"
+            [min]="Max"
+          />
+        </div>
+
+        <div class="black_font mt-2 ms-3">Week :</div>
+        <div class="input_container ms-2">
+          <input
+            type="number"
+            class="input form-control field text-center hide-spinner"
+            [(ngModel)]="Week"
+            [min]="2"
+          />
+
+          <div class="input_img" (click)="add()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="22"
+              fill="currentColor"
+              class="bi bi-plus-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+              />
+            </svg>
+          </div>
+          <div class="input_img1" (click)="sub()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="22"
+              fill="currentColor"
+              class="bi bi-dash-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="ms-3">
+          <button class="btn btn-success button w-auto" (click)="fetchdata()">
+            Find
+          </button>
+        </div>
+        <button
+          class="ms-3 btn btn-warning button w-auto"
+          (click)="openRangeUpdateModal(Range)"
+        >
+          Range Update
+        </button>
+      </div>
+      <div class="inline1">
+        <div class="d-flex ms-2 my-2">
+          <div class="black_font mt-2">Filter :</div>
+        </div>
+        <div class="mt-2 ms-2" style="width: 200px !important">
+          <ng-multiselect-dropdown
+            name="roomtype"
+            [placeholder]="'Select RoomType'"
+            [settings]="dropdownSettings"
+            [data]="dropdownList"
+            [(ngModel)]="selectedItems"
+            style="font-size: 13px !important; background: white !important"
+            (onSelect)="filterRoom()"
+            (onDeSelect)="filterRoom()"
+          >
+          </ng-multiselect-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mx-3 mt-2 inline2 pb-3">
+    <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 pl-0">
+      <div
+        style="
+          overflow-x: auto;
+          border-right: 1px solid rgba(0, 0, 0, 0.1);
+          max-height: 70vh !important;
+        "
+        id="scroll"
+      >
+        <table
+          class="table-bordered global_table"
+          style="overflow-x: hidden !important"
+        >
+          <thead>
+            <th style="z-index: 4">Room Type</th>
+            <th style="z-index: 4">Room</th>
+            <th style="z-index: 4">Condition</th>
+            <th style="z-index: 3" *ngFor="let item of DateArr; let i = index">
+              {{ item | date : "dd MMM" }}
+            </th>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of RoomData; let i = index">
+              <tr *ngIf="item.Show">
+                <td style="z-index: 3">{{ item.roomType }}</td>
+                <td style="z-index: 3">
+                  {{ item.roomName }}
+                </td>
+                <td style="z-index: 3">
+                  <div class="d-flex justify-content-center">
+                    <div
+                      class="clean px-2"
+                      [ngClass]="{
+                        clean_active: item.roomCondition == 'clean'
+                      }"
+                    >
+                      Clean
+                    </div>
+                    <div
+                      class="dirty px-2"
+                      [ngClass]="{
+                        dirty_active: item.roomCondition == 'dirty'
+                      }"
+                    >
+                      Dirty
+                    </div>
+                  </div>
+                </td>
+                <td *ngFor="let d of DateArr; let k = index">
+                  <div>
+                    <ng-container *ngFor="let r of item.Reservation">
+                      <ng-container
+                        *ngIf="
+                          r.arrival <= d && r.departure > d && !r.tentative
+                        "
+                      >
+                        <div
+                          *ngIf="test(d, r)"
+                          [style]="
+                            'width:' +
+                            nightNumber(r.arrival, r.departure) * 96 +
+                            'px;'
+                          "
+                          [class]="'' + setBackground(r)"
+                        >
+                          <div class="d-flex">
+                            <div class="col d-flex justify-content-center text-truncate">
+                              <div style="margin-left: 4px !important;" class="text-truncate">
+                                {{ r.guestName }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                    <ng-container *ngFor="let m of item.RoomMaintainance">
+                      <ng-container *ngIf="m.startDate <= d && m.endDate >= d">
+                        <div
+                          *ngIf="testmaintainance(d, m)"
+                          [style.width]="
+                            nightNumber(m.startDate, m.endDate) * 90 + 'px'
+                          "
+                          class="renovation"
+                          (click)="maintainance(m)"
+                        >
+                          <div
+                            class="d-flex align-items-center"
+                            style="cursor: pointer"
+                          >
+                            <div class="ms-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="black"
+                                class="bi bi-house-slash"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  d="M13.879 10.414a2.5 2.5 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"
+                                />
+                                <path
+                                  d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708z"
+                                />
+                              </svg>
+                            </div>
+                            <div
+                              class="col d-flex justify-content-center"
+                              style="
+                                z-index: 0;
+                                overflow: hidden;
+                                padding-left: 4px;
+                              "
+                            >
+                              <div class="text-truncate">
+                                {{ m.reason }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="mt-md-3 mt-sm-2 mt-lg-0 col-lg-3 col-md-12 col-sm-12 col-xs-12 pr-0"
+    >
+      <div class="ms-4">
+        <div
+          class="blue_container1 d-flex justify-content-center"
+          style="cursor: pointer"
+          (click)="showAddpop()"
+        >
+          <div class="d-flex">
+            <div class="my-2">+ Add Block Room</div>
+          </div>
+        </div>
+        <div class="custom_container my-3" *ngIf="ShowMain">
+          <div class="blue_container py-2 d-flex">
+            <div class="col d-flex justify-content-center">
+              <div style="padding-left: 30px !important">
+                {{ CurrentMaintainance.reason }}
+              </div>
+            </div>
+            <div
+              style="column-width: 20px !important; cursor: pointer"
+              class="me-2"
+              *ngIf="!CurrentMaintainance.isCompleted"
+              (click)="showEdit()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-pencil"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"
+                />
+              </svg>
+            </div>
+          </div>
+          <table class="table table-sm table-borderless maintenance_table">
+            <thead>
+              <th>Room</th>
+              <th>Start</th>
+              <th>End</th>
+            </thead>
+            <tbody>
+              <td>{{ CurrentMaintainance.roomName }}</td>
+              <td>{{ CurrentMaintainance.startDate | date : "MMM d" }}</td>
+              <td>{{ CurrentMaintainance.endDate | date : "MMM d" }}</td>
+            </tbody>
+          </table>
+          <div
+            class="mx-3 py-2 d-flex flex-column align-items-center"
+            style="background-color: #f1f8ff"
+            *ngIf="CurrentMaintainance.description"
+          >
+            <div class="notes">Notes :</div>
+            <small class="">{{ CurrentMaintainance.description }}</small>
+          </div>
+          <div class="d-flex justify-content-center mt-2 pb-2">
+            <button class="btn light_button button" (click)="Cancelupdate()">
+              Cancel
+            </button>
+            <button
+              class="btn btn-primary button ms-2"
+              (click)="updateMaintenance(true)"
+              [disabled]="CurrentMaintainance.isCompleted"
+            >
+              Complete
+            </button>
+          </div>
+        </div>
+        <ng-container *ngIf="ShowAdd">
+          <form
+            [formGroup]="AddMaintenance"
+            class="custom_container my-3 pt-2 pb-1 px-2"
+          >
+            <table class="table table-sm table-borderless add_table">
+              <tr>
+                <td>
+                  <div class="mt-1">Start Date*:</div>
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    class="form-control field"
+                    formControlName="startDate"
+                    [min]="Today"
+                    (input)="getAvailRoomdata()"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="
+                      AddMaintenance.controls['startDate'].touched &&
+                      AddMaintenance.controls['startDate'].invalid
+                    "
+                  >
+                    Enter valid Date!
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-1">End Date*:</div>
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    class="form-control field"
+                    formControlName="endDate"
+                    [min]="getTomorrow()"
+                    (input)="getAvailRoomdata()"
+                  />
+                  <p
+                    class="text-danger"
+                    *ngIf="
+                      AddMaintenance.controls['endDate'].touched &&
+                      AddMaintenance.controls['endDate'].invalid
+                    "
+                  >
+                    Enter valid Date!
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-1">Room Type:</div>
+                </td>
+                <td>
+                  <div>
+                    <select
+                      id="options"
+                      formControlName="roomType"
+                      class="form-control"
+                      style="appearance: auto"
+                      (change)="showRooms($event)"
+                    >
+                      <option value="">Select Type</option>
+                      <option
+                        *ngFor="let item of availableRoom"
+                        [value]="item._id"
+                      >
+                        {{ item._id }}
+                      </option>
+                    </select>
+                    <p
+                      class="text-danger"
+                      *ngIf="
+                        AddMaintenance.controls['roomType'].touched &&
+                        AddMaintenance.controls['roomType'].invalid
+                      "
+                    >
+                      Enter valid RoomType!
+                    </p>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>Room*:</div>
+                </td>
+                <td>
+                  <div>
+                    <ng-multiselect-dropdown
+                      name="Rooms"
+                      [placeholder]="'Select Room'"
+                      formControlName="Rooms"
+                      [settings]="dropdownSettingsRooms"
+                      [data]="dropdownListRoom"
+                      style="background: white !important"
+                    >
+                    </ng-multiselect-dropdown>
+                    <p
+                      class="text-danger"
+                      *ngIf="
+                        AddMaintenance.controls['Rooms'].touched &&
+                        AddMaintenance.controls['Rooms'].invalid
+                      "
+                    >
+                      Enter valid RoomType!
+                    </p>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-1">Reason*:</div>
+                </td>
+                <td>
+                  <div class="select1">
+                    <select class="form-control field" formControlName="Reason">
+                      <option value="">Select One</option>
+                      <option value="Plumbing">Plumbing</option>
+                      <option value="Heater/AC">Heater/AC</option>
+                      <option value="Painting">Painting</option>
+                      <option value="Door">Door</option>
+                      <option value="Renovation">Renovation</option>
+                      <option value="Telephone">Telephone</option>
+                      <option value="Television/Cable">Television/Cable</option>
+                      <option value="Deep Cleaning">Deep Cleaning</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div class="select1__arrow"></div>
+                  </div>
+                  <p
+                    class="text-danger"
+                    *ngIf="
+                      AddMaintenance.controls['Reason'].touched &&
+                      AddMaintenance.controls['Reason'].invalid
+                    "
+                  >
+                    Enter valid Reason!
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-1">Notes:</div>
+                </td>
+                <td>
+                  <textarea
+                    type="text"
+                    class="form-control field"
+                    rows="2"
+                    formControlName="Notes"
+                  ></textarea>
+                </td>
+              </tr>
+            </table>
+            <div class="d-flex justify-content-center mt-2 pb-2">
+              <button class="btn light_button button" (click)="cancelpop()">
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary button ms-2"
+                (click)="addMaintenance()"
+                [disabled]="AddMaintenance.invalid"
+              >
+                Add
+              </button>
+            </div>
+          </form>
+        </ng-container>
+        <ng-container *ngIf="this.ShowEdit == true">
+          <div class="custom_container my-3 pt-2 pb-1 px-2">
+            <table class="table table-sm table-borderless add_table">
+              <tr>
+                <td>
+                  <div class="mt-2">Start Date:</div>
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    class="form-control field"
+                    [(ngModel)]="CurrentMaintainance.startDate"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-2">End Date:</div>
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    class="form-control field"
+                    [(ngModel)]="CurrentMaintainance.endDate"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-2">Room Type:</div>
+                </td>
+                <td>
+                  <div class="select1">
+                    <select
+                      class="form-control field"
+                      disabled
+                      [(ngModel)]="CurrentMaintainance.roomType"
+                    >
+                      <option *ngFor="let item of RoomTypes" [value]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                    <div class="select1__arrow"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-2">Room:</div>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control field"
+                    [(ngModel)]="CurrentMaintainance.roomName"
+                    readonly
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-2">Reason*:</div>
+                </td>
+                <td>
+                  <div class="select1">
+                    <select
+                      class="form-control field"
+                      [(ngModel)]="CurrentMaintainance.reason"
+                    >
+                      <option value="">Select One</option>
+                      <option value="Plumbing">Plumbing</option>
+                      <option value="Heater/AC">Heater/AC</option>
+                      <option value="Painting">Painting</option>
+                      <option value="Door">Door</option>
+                      <option value="Renovation">Renovation</option>
+                      <option value="Telephone">Telephone</option>
+                      <option value="Television/Cable">Television/Cable</option>
+                      <option value="Deep Cleaning">Deep Cleaning</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div class="select1__arrow"></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mt-2">Notes:</div>
+                </td>
+                <td>
+                  <textarea
+                    type="text"
+                    class="form-control field"
+                    rows="2"
+                    [(ngModel)]="CurrentMaintainance.description"
+                  ></textarea>
+                </td>
+              </tr>
+            </table>
+            <div class="d-flex justify-content-center mt-2 pb-2">
+              <button class="btn light_button button" (click)="cancelpop()">
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary button ms-2"
+                (click)="updateMaintenance(false)"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #Range let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Range Update</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss(false)"
+    ></button>
+  </div>
+
+  <div style="overflow-x: auto; overflow-y: auto; max-height: 500px">
+    <table
+      class="table table-sm table-borderless maintenance_table range_table"
+    >
+      <thead>
+        <tr>
+          <th>
+            <div class="d-flex">
+              <div>Select all</div>
+              <input
+                class="ms-1"
+                type="checkbox"
+                (change)="toggleSelectAll($event)"
+              />
+            </div>
+          </th>
+          <th>Room Type</th>
+          <th>Room</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Reason</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of RoomData">
+          <ng-container *ngFor="let m of item.RoomMaintainance">
+            <tr>
+              <td>
+                <div class="mt-1">
+                  <input
+                    type="checkbox"
+                    [checked]="isSelected(m)"
+                    (change)="onSelectChange(m, $event)"
+                  />
+                </div>
+              </td>
+              <td>{{ item.roomType }}</td>
+              <td>{{ item.roomName }}</td>
+              <td>{{ m.startDate | date : "dd/MM/yyyy" }}</td>
+              <td>{{ m.endDate | date : "dd/MM/yyyy" }}</td>
+              <td>{{ m.reason }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-success my-2" (click)="rangeUpdate()">
+      Complete
+    </button>
+  </div>
+</ng-template>

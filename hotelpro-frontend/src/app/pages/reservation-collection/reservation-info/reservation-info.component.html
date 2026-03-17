@@ -1,0 +1,870 @@
+<div class="m-3 row g-0">
+  <div class="col-9">
+    <form [formGroup]="groupForm" class="container_form p-3 m-2 rounded">
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-between">
+            <p class="form-label fs-3 fw-semibold">Customer Details</p>
+            <ngx-file-drop
+              dropZoneClassName="my-style"
+              contentClassName="my-style"
+              (onFileDrop)="dropped($event, groupForm)"
+            >
+              <ng-template
+                ngx-file-drop-content-tmp
+                let-openFileSelector="openFileSelector"
+              >
+                <a
+                  class="card-link"
+                  (click)="openFileSelector()"
+                  style="cursor: pointer"
+                  >Add
+                  <i class="material-symbols-rounded" style="font-size: 20px">
+                    file_present</i
+                  ></a
+                >
+              </ng-template>
+            </ngx-file-drop>
+          </div>
+
+          <hr class="m-0" />
+        </div>
+        <div class="col mt-3">
+          <label class="form-label"> First Name*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="firstName"
+            placeholder="Enter  First Name"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('firstName')?.dirty ||
+                  groupForm.get('firstName')?.touched) &&
+                groupForm.get('firstName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (groupForm.get('firstName')?.dirty ||
+                groupForm.get('firstName')?.touched) &&
+              groupForm.get('firstName')?.invalid
+            "
+            >First Name is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label"> Last Name*</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="lastName"
+            placeholder="Enter  Last Name"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('lastName')?.dirty ||
+                  groupForm.get('lastName')?.touched) &&
+                groupForm.get('lastName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (groupForm.get('lastName')?.dirty ||
+                groupForm.get('lastName')?.touched) &&
+              groupForm.get('lastName')?.invalid
+            "
+            >Last Name is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label"> Phone</label>
+          <input
+            type="tel"
+            class="form-control"
+            formControlName="phone"
+            placeholder="Enter  Phone"
+            maxlength="10"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('phone')?.dirty ||
+                  groupForm.get('phone')?.touched) &&
+                groupForm.get('phone')?.invalid
+            }"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label"> Email</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="email"
+            placeholder="Enter  Email"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('email')?.dirty ||
+                  groupForm.get('email')?.touched) &&
+                groupForm.get('email')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (groupForm.get('email')?.dirty ||
+                groupForm.get('email')?.touched) &&
+              groupForm.get('email')?.invalid
+            "
+            >Email is not valid</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Address Line 1</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressLine1"
+            placeholder="Enter Address Line 1"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('addressLine1')?.dirty ||
+                  groupForm.get('addressLine1')?.touched) &&
+                groupForm.get('addressLine1')?.invalid
+            }"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Address Line 2</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressLine2"
+            placeholder="Enter Address Line 2"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">City</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="city"
+            placeholder="Enter City"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('city')?.dirty ||
+                  groupForm.get('city')?.touched) &&
+                groupForm.get('city')?.invalid
+            }"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">State</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="state"
+            placeholder="Enter State"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('state')?.dirty ||
+                  groupForm.get('state')?.touched) &&
+                groupForm.get('state')?.invalid
+            }"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Country</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="country"
+            placeholder="Enter Country"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('country')?.dirty ||
+                  groupForm.get('country')?.touched) &&
+                groupForm.get('country')?.invalid
+            }"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Zip Code</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="zipCode"
+            placeholder="Enter Zip Code"
+            [ngClass]="{
+              'is-invalid':
+                (groupForm.get('zipCode')?.dirty ||
+                  groupForm.get('zipCode')?.touched) &&
+                groupForm.get('zipCode')?.invalid
+            }"
+          />
+        </div>
+        <div class="col d-flex mt-3">
+          <div *ngFor="let s of groupForm.get('documents')?.value">
+            <img [src]="s" alt="img" style="height: 100px; width: 100px" />
+            <i
+              class="material-symbols-rounded text-danger pt-2"
+              (click)="deletePhotos(s, groupForm)"
+            >
+              delete
+            </i>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-3">
+    <div class="card container_form p-3 m-2 rounded">
+      <label class="form-label fw-semibold">
+        {{ isWalkin ? "Walk In" : "Reservation" }} Summary</label
+      >
+      <div class="card-body">
+        <label class="form-label">
+          CheckIn Date :
+          <span class="fw-semibold">{{
+            groupForm.get("arrival")?.value
+          }}</span></label
+        >
+        <label class="form-label">
+          CheckOut Date :
+          <span class="fw-semibold">{{
+            groupForm.get("departure")?.value
+          }}</span></label
+        >
+        <label class="form-label">
+          Adults:
+          <span class="fw-semibold">{{ groupForm.get("adults")?.value }}</span>
+          Childs:
+          <span class="fw-semibold">{{
+            groupForm.get("childs")?.value
+          }}</span></label
+        >
+      </div>
+      <form [formGroup]="reservationForm">
+        <ul formArrayName="reservations" class="list-group list-group-flush">
+          <li
+            *ngFor="let reservation of reservations.controls; let i = index"
+            [formGroupName]="i"
+            class="list-group-item"
+          >
+            <div class="d-flex justify-content-between">
+              <div>
+                {{ reservation?.get("roomtype")?.value }}
+              </div>
+              <div>
+                {{ reservation?.get("roomCost")?.value }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </form>
+      <div class="card-body">
+        <label class="form-label w-100">
+          Total Price :
+          <span class="fw-semibold">{{
+            groupForm.get("totalPrice")?.value?.toFixed(2)
+          }}</span></label
+        >
+        <label class="form-label w-100">
+          Total Tax :
+          <span class="fw-semibold">{{
+            (
+              groupForm.get("totalCost")?.value -
+              groupForm.get("totalPrice")?.value
+            ).toFixed(2)
+          }}</span></label
+        >
+        <label class="form-label">
+          Total Cost :
+          <span class="fw-semibold">{{
+            groupForm.get("totalCost")?.value?.toFixed(2)
+          }}</span></label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="reservationForm" class="">
+  <div formArrayName="reservations">
+    <div
+      *ngFor="let reservation of reservations.controls; let i = index"
+      [formGroupName]="i"
+      class="m-3 row g-0"
+    >
+      <div class="col-md-12">
+        <div
+          class="d-flex justify-content-between container_form p-3 m-2 rounded"
+          (click)="
+            reservation
+              .get('isDetailsVisiable')
+              ?.setValue(!reservation.get('isDetailsVisiable')?.value)
+          "
+          style="cursor: pointer"
+        >
+          <h5 class="form-label fw-semibold">
+            {{ isWalkin ? "Walk In" : "Reservation" }} Details of (
+            {{ reservation?.get("roomtype")?.value }} -
+            {{ reservation?.get("rateName")?.value }})
+            {{
+              "Adults/Childs" +
+                ":" +
+                reservation.get("adultOccupant")?.value +
+                "/" +
+                reservation.get("childOccupant")?.value
+            }}
+            {{
+              reservation.get("extraAdults")?.value > 0 ||
+              reservation.get("extraChilds")?.value > 0
+                ? "Extra Adults/Childs" +
+                  ":" +
+                  reservation.get("extraAdults")?.value +
+                  "/" +
+                  reservation.get("extraChilds")?.value
+                : ""
+            }}
+          </h5>
+          <div>
+            <i
+              class="material-symbols-rounded ms-2"
+              [style]="
+                reservation.get('isDetailsVisiable')?.value
+                  ? '    rotate: 270deg;'
+                  : '    rotate: 90deg;'
+              "
+            >
+              arrow_forward_ios
+            </i>
+          </div>
+        </div>
+
+        <hr class="m-0" />
+      </div>
+      <div class="col-9" *ngIf="reservation.get('isDetailsVisiable')?.value">
+        <div
+          class="row row-cols-1 row-cols-md-2 container_form p-3 m-2 rounded"
+        >
+          <div class="col-md-12" formArrayName="guests">
+            <div
+              class="row row-cols-1 row-cols-md-2"
+              *ngFor="
+                let guest of getGuests(reservation).controls;
+                let k = index
+              "
+              [formGroupName]="k"
+            >
+              <div class="col-md-12 mt-2">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <label class="form-label fw-semibold"
+                      >Guest Information {{ k + 1 }}
+                    </label>
+                  </div>
+                  <div>
+                    <div class="d-flex ms-2">
+                      <ngx-file-drop
+                        dropZoneClassName="my-style"
+                        contentClassName="my-style"
+                        (onFileDrop)="dropped($event, guest)"
+                      >
+                        <ng-template
+                          ngx-file-drop-content-tmp
+                          let-openFileSelector="openFileSelector"
+                        >
+                          <a
+                            class="card-link"
+                            (click)="openFileSelector()"
+                            style="cursor: pointer"
+                            >Add
+                            <i
+                              class="material-symbols-rounded"
+                              style="font-size: 20px"
+                            >
+                              file_present</i
+                            ></a
+                          >
+                        </ng-template>
+                      </ngx-file-drop>
+                      <div class="form-check ms-2">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          formControlName="isSameAsCustomer"
+                          (click)="sameAsCustomer(guest, $event)"
+                        />
+                        <label class="form-check-label">Same as Customer</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="m-0" />
+                <button
+                  class="btn btn-primary mt-2"
+                  (click)="addGuest(i)"
+                  *ngIf="k == 0"
+                >
+                  <i
+                    class="material-symbols-rounded"
+                    style="vertical-align: middle"
+                  >
+                    add
+                  </i>
+                  Add Guest
+                </button>
+                <button
+                  class="btn btn-primary mt-2"
+                  (click)="removeGuest(i, k)"
+                  *ngIf="k > 0"
+                >
+                  <i
+                    class="material-symbols-rounded"
+                    style="vertical-align: middle"
+                  >
+                    remove
+                  </i>
+                  Remove Guest
+                </button>
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label"> First Name </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="firstName"
+                  placeholder="Enter  First Name"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('firstName')?.dirty ||
+                        guest.get('firstName')?.touched) &&
+                      guest.get('firstName')?.invalid
+                  }"
+                />
+                <small
+                  class="text-danger"
+                  *ngIf="
+                    (guest.get('firstName')?.dirty ||
+                      guest.get('firstName')?.touched) &&
+                    guest.get('firstName')?.invalid
+                  "
+                  >First Name is required</small
+                >
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label"> Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="lastName"
+                  placeholder="Enter  Last Name"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('lastName')?.dirty ||
+                        guest.get('lastName')?.touched) &&
+                      guest.get('lastName')?.invalid
+                  }"
+                />
+                <small
+                  class="text-danger"
+                  *ngIf="
+                    (guest.get('lastName')?.dirty ||
+                      guest.get('lastName')?.touched) &&
+                    guest.get('lastName')?.invalid
+                  "
+                  >Last Name is required</small
+                >
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label"> Phone</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="phone"
+                  placeholder="Enter  Phone"
+                  maxlength="10"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('phone')?.dirty ||
+                        guest.get('phone')?.touched) &&
+                      guest.get('phone')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label"> Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="email"
+                  placeholder="Enter  Email"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('email')?.dirty ||
+                        guest.get('email')?.touched) &&
+                      guest.get('email')?.invalid
+                  }"
+                />
+                <small
+                  class="text-danger"
+                  *ngIf="
+                    (guest.get('email')?.dirty ||
+                      guest.get('email')?.touched) &&
+                    guest.get('email')?.invalid
+                  "
+                  >Email is not valid</small
+                >
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label">Address Line 1</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="addressLine1"
+                  placeholder="Enter Address Line 1"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('addressLine1')?.dirty ||
+                        guest.get('addressLine1')?.touched) &&
+                      guest.get('addressLine1')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label">Address Line 2</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="addressLine2"
+                  placeholder="Enter Address Line 2"
+                />
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="city"
+                  placeholder="Enter City"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('city')?.dirty ||
+                        guest.get('city')?.touched) &&
+                      guest.get('city')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="state"
+                  placeholder="Enter State"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('state')?.dirty ||
+                        guest.get('state')?.touched) &&
+                      guest.get('state')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="country"
+                  placeholder="Enter Country"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('country')?.dirty ||
+                        guest.get('country')?.touched) &&
+                      guest.get('country')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col mt-3">
+                <label class="form-label">Zip Code</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="zipCode"
+                  placeholder="Enter Zip Code"
+                  [ngClass]="{
+                    'is-invalid':
+                      (guest.get('zipCode')?.dirty ||
+                        guest.get('zipCode')?.touched) &&
+                      guest.get('zipCode')?.invalid
+                  }"
+                />
+              </div>
+              <div class="col d-flex mt-3">
+                <div *ngFor="let s of guest.get('documents')?.value">
+                  <img
+                    [src]="s"
+                    alt="img"
+                    style="height: 100px; width: 100px"
+                  />
+                  <i
+                    class="material-symbols-rounded text-danger pt-2"
+                    (click)="deletePhotos(s, guest)"
+                  >
+                    delete
+                  </i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3" *ngIf="reservation.get('isDetailsVisiable')?.value">
+        <div class="card container_form p-3 m-2 rounded">
+          <label class="form-label fw-semibold">Room Details</label>
+          <div class="card-body">
+            <label class="form-label">Room:</label>
+            <select
+              formControlName="roomId"
+              class="form-control"
+              style="appearance: auto"
+            >
+              <option
+                *ngFor="
+                  let room of filterRooms(
+                    roomTypeRooms[reservation.get('roomTypeId')?.value],
+                    i
+                  )
+                "
+                [value]="room.id"
+              >
+                {{ room.roomName }}
+              </option>
+              @if(!isWalkin){
+              <option value="assign">assign</option>
+              }
+            </select>
+
+            <label class="form-label mt-2">
+              Room Price :
+              <span class="fw-semibold"
+                >{{ reservation?.get("roomPrice")?.value?.toFixed(2) }}
+              </span>
+            </label>
+            <br />
+            <label class="form-label">
+              Room Cost :
+              <a
+                class="link"
+                (click)="openUpdateRate(RateUpdate, reservation?.value, i)"
+              >
+                {{ reservation?.get("roomCost")?.value?.toFixed(2) }}
+              </a></label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="d-flex justify-content-center mb-2">
+  <button
+    class="btn btn-primary mt-2 me-2"
+    [disabled]="groupForm.invalid || reservationForm.invalid"
+    (click)="onReserve(confirmReservation)"
+  >
+    {{ isWalkin ? "Check In" : "Reserve" }}
+  </button>
+  <button
+    class="btn btn-primary mt-2 ms-2"
+    [disabled]="groupForm.invalid || reservationForm.invalid"
+    (click)="goToPayment()"
+  >
+    Payment
+  </button>
+</div>
+
+<ng-template #RateUpdate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Rate Update</h4>
+    <button
+      #closeButton
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="2">DATE</th>
+          <th>ESTIMATED COST</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rate of updateDateRateObj.dateRate; let i = index">
+          <th colspan="2">{{ rate.date | date }}</th>
+
+          <td class="text-center">
+            {{ rate.baseRate }}
+          </td>
+        </tr>
+        <tr *ngIf="updateDateRateObj.extraAdults > 0">
+          <td>Extra Adults</td>
+
+          <td class="text-center">
+            {{
+              updateDateRateObj.extraAdults +
+                "*" +
+                updateDateRateObj.dateRate[0].adultRate +
+                "*" +
+                updateDateRateObj.dateRate.length +
+                " Night"
+            }}
+          </td>
+          <td class="text-center">
+            {{
+              updateDateRateObj.extraAdults *
+                updateDateRateObj.dateRate[0].adultRate *
+                updateDateRateObj.dateRate.length
+            }}
+          </td>
+        </tr>
+        <tr *ngIf="updateDateRateObj.extraChilds">
+          <td>Extra Childs</td>
+          <td class="text-center">
+            {{
+              updateDateRateObj.extraChilds +
+                "*" +
+                updateDateRateObj.dateRate[0].childRate +
+                "*" +
+                updateDateRateObj.dateRate.length +
+                " Night"
+            }}
+          </td>
+          <td class="text-center">
+            {{
+              updateDateRateObj.extraChilds *
+                updateDateRateObj.dateRate[0].childRate *
+                updateDateRateObj.dateRate.length
+            }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Tax Summary({{ updateDateRateObj.taxPercentage + " %" }})
+          </td>
+
+          <td class="text-center">
+            {{
+              (updateDateRateObj.taxPercentage * updateDateRateObj.roomPrice) /
+                100
+            }}
+          </td>
+        </tr>
+        <tr style="vertical-align: middle">
+          <td class="text-center">
+            Total Price {{ updateDateRateObj.roomPrice }}
+          </td>
+          <td>Total Cost</td>
+          <td class="text-center">
+            <input
+              type="number"
+              [(ngModel)]="updateDateRateObj.roomCost"
+              class="form-control custom_input text_center rate_input"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end pb-3">
+      <button class="btn btn-primary me-2" (click)="calculateRate()">
+        Calculate
+      </button>
+      <button class="btn btn-primary" (click)="modal.close(true)">Save</button>
+      <button class="btn light_button button ml-2" (click)="modal.close(false)">
+        cancel
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- <div class="center">
+  <ngx-file-drop
+    dropZoneClassName="my-style"
+    contentClassName="my-style"
+    (onFileDrop)="dropped($event)"
+  >
+    <ng-template
+      ngx-file-drop-content-tmp
+      let-openFileSelector="openFileSelector"
+    >
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openFileSelector()"
+      >
+        Add Files
+      </button>
+    </ng-template>
+  </ngx-file-drop>
+  <div class="upload-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody class="upload-name-style">
+        <tr *ngFor="let item of files; let i = index">
+          <td>
+            <strong>{{ item.relativePath }}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->
+<ng-template #confirmReservation let-modal>
+  <div class="modal-body">
+    <h6 class="modal-title">
+      Are you sure want to countinue without payment ?
+    </h6>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="goToPayment()">
+      Go to Payment
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close(false)"
+    >
+      No
+    </button>
+    <button type="button" class="btn btn-primary" (click)="modal.close(true)">
+      Yes
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,1809 @@
+<div class="m-3 row g-0">
+  <div class="container_form p-3 m-2 rounded">
+    <div class="d-flex justify-content-between">
+      <div>
+        <p class="form-label fs-5 fw-semibold">
+          Reservation Folio (#{{ groupDetails?.groupNumber }})
+          {{ groupDetails?.arrival | date : "MMM d, y" }}
+          <i class="material-symbols-rounded" style="vertical-align: middle">
+            line_end_arrow_notch
+          </i>
+          {{ groupDetails?.departure | date : "MMM d, y" }} Rooms:
+          {{ groupDetails?.reservations?.length }}
+        </p>
+      </div>
+      <div>
+        <i
+          class="material-symbols-rounded mt-2"
+          style="vertical-align: middle"
+          aria-label="Print"
+          (click)="printInvoice()"
+        >
+          print
+        </i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9 col-12">
+    <div class="container_form p-3 m-2 rounded">
+      <div class="row">
+        <div class="col-8">
+          <div class="d-flex flex-column">
+            <label class="form-label fw-semibold mb-2">
+              Customer Details:
+              <i
+                class="material-symbols-rounded"
+                style="font-size: 20px"
+                (click)="
+                  openGuestForm(
+                    guestModal,
+                    null,
+                    false,
+                    groupDetails?.customerDetails,
+                    groupDetails?.customerDetails?.customerAddress
+                  )
+                "
+                aria-label="Edit customer details"
+              >
+                edit
+              </i>
+            </label>
+            <label class="form-label">
+              Name:
+              <span class="fw-semibold">
+                {{ groupDetails?.customerDetails?.firstName }}
+                {{ groupDetails?.customerDetails?.lastName }}
+              </span>
+            </label>
+            <label class="form-label">
+              Phone:
+              <span class="fw-semibold">
+                {{ groupDetails?.customerDetails?.phone }}
+              </span>
+            </label>
+            <label class="form-label">
+              Email:
+              <span class="fw-semibold">
+                {{ groupDetails?.customerDetails?.email }}
+              </span>
+            </label>
+            <label class="form-label">
+              Address:
+              <span class="fw-semibold">
+                {{
+                  groupDetails?.customerDetails?.customerAddress?.addressLine1
+                    ? groupDetails?.customerDetails?.customerAddress
+                        ?.addressLine1 + ","
+                    : ""
+                }}
+                {{
+                  groupDetails?.customerDetails?.customerAddress?.city
+                    ? groupDetails?.customerDetails?.customerAddress?.city + ","
+                    : ""
+                }}
+                {{
+                  groupDetails?.customerDetails?.customerAddress?.state
+                    ? groupDetails?.customerDetails?.customerAddress?.state +
+                      ","
+                    : ""
+                }}
+                {{
+                  groupDetails?.customerDetails?.customerAddress?.country
+                    ? groupDetails?.customerDetails?.customerAddress?.country +
+                      ","
+                    : ""
+                }}
+                {{ groupDetails?.customerDetails?.customerAddress?.zipCode }}
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="col-4 text-end">
+          <div class="d-flex flex-column">
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openPaymentModal(paymentModal)"
+            >
+              Make Payment
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openRefundModal(refundModal)"
+            >
+              Make Refund
+            </label>
+            <label class="form-label fw-semibold mt-2 link">View Logs</label>
+            <!-- <label class="form-label fw-semibold mt-2 link"
+              >Cancel Reservations</label
+            > -->
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openAddRoomModal(addRoomModal)"
+            >
+              Add Room
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-12">
+    <div class="card container_form p-3 m-2 rounded">
+      <label class="form-label fw-semibold">Reservation Summary</label>
+      <div class="card-body pt-2">
+        <label class="form-label">
+          Adults/Children:
+          <span class="fw-semibold"
+            >{{ groupDetails?.adults }} / {{ groupDetails?.childs }}</span
+          >
+        </label>
+        <br />
+        <label class="form-label">
+          Total Price:
+          <span class="fw-semibold">{{
+            groupDetails?.totalPrice | currency : "INR"
+          }}</span>
+        </label>
+        <br />
+        <label class="form-label">
+          Total Tax:
+          <span class="fw-semibold">{{
+            groupDetails?.totalTax | currency : "INR"
+          }}</span>
+        </label>
+        <br />
+        <label class="form-label">
+          Total Charge:
+          <span class="fw-semibold">{{
+            groupDetails?.totalExtraCharge | currency : "INR"
+          }}</span>
+        </label>
+        <br />
+        <label class="form-label">
+          Total Cost:
+          <span class="fw-semibold">{{
+            groupDetails?.totalCost | currency : "INR"
+          }}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  @for (reservation of groupDetails?.reservations; track reservation; let i =
+  $index) {
+  <div class="col-md-12">
+    <div class="container_form p-3 m-2 rounded">
+      <div class="d-flex justify-content-between">
+        <div>
+          <p class="form-label fs-5 fw-semibold">
+            #{{ reservation.confirmationNumber }} ({{
+              reservation?.roomTypeDetails?.roomTypeName
+            }}
+            -
+            {{
+              reservation?.roomDetails?.roomName
+                ? reservation?.roomDetails?.roomName
+                : "unassign"
+            }})
+            {{ reservation?.arrival | date }}
+            <i class="material-symbols-rounded" style="vertical-align: middle">
+              line_end_arrow_notch
+            </i>
+            {{ reservation?.departure | date }} (Nights
+            {{ reservation?.nights }})
+          </p>
+        </div>
+        <!-- <div>
+          <i
+            class="material-symbols-rounded mt-2"
+            style="vertical-align: middle"
+            aria-label="Print"
+          >
+            print
+          </i>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9 col-12">
+    <div class="container_form p-3 m-2 rounded">
+      <div class="row">
+        <div class="col-md-4 col-12">
+          @if(roomTypeImages[reservation.roomTypeId]?.length > 0){
+          <div style="height: 200px; text-align: center; margin: 0; padding: 0">
+            <ng-image-slider
+              #nav
+              [images]="roomTypeImages[reservation.roomTypeId]"
+              [infinite]="false"
+              [autoSlide]="1"
+              [imageSize]="{ width: 300, height: 200 }"
+              slideImage="1"
+            ></ng-image-slider>
+          </div>
+          }@else {
+          <ng-image-slider
+            #nav
+            [images]="imageObject"
+            [infinite]="false"
+            [autoSlide]="1"
+            [imageSize]="{ width: 300, height: 200 }"
+            slideImage="1"
+          ></ng-image-slider>
+          }
+        </div>
+        <div class="col-md-5 col-8">
+          <label class="form-label">
+            Name:
+            <span class="fw-semibold">
+              {{ reservation?.guestDetails?.firstName }}
+              {{ reservation?.guestDetails?.lastName }}
+            </span>
+            <i
+              class="material-symbols-rounded ms-1"
+              style="font-size: 20px"
+              (click)="
+                openGuestForm(
+                  guestModal,
+                  reservation._id,
+                  false,
+                  reservation?.guestDetails,
+                  reservation?.guestDetails?.guestAddress
+                )
+              "
+              aria-label="Edit guest details"
+            >
+              edit
+            </i>
+            <i class="material-symbols-rounded" style="font-size: 20px">
+              group
+            </i>
+          </label>
+          <br />
+          <label class="form-label">
+            Phone:
+            <span class="fw-semibold">{{
+              reservation?.guestDetails?.phone
+            }}</span>
+          </label>
+          <br />
+          <label class="form-label">
+            Email:
+            <span class="fw-semibold">{{
+              reservation?.guestDetails?.email
+            }}</span>
+          </label>
+          <br />
+          <label class="form-label">
+            Address:
+            <span class="fw-semibold">
+              {{
+                reservation?.guestDetails?.guestAddress?.addressLine1
+                  ? reservation?.guestDetails?.guestAddress?.addressLine1 + ","
+                  : ""
+              }}
+              {{
+                reservation?.guestDetails?.guestAddress?.city
+                  ? reservation?.guestDetails?.guestAddress?.city + ","
+                  : ""
+              }}
+              {{
+                reservation?.guestDetails?.guestAddress?.state
+                  ? reservation?.guestDetails?.guestAddress?.state + ","
+                  : ""
+              }}
+              {{
+                reservation?.guestDetails?.guestAddress?.country
+                  ? reservation?.guestDetails?.guestAddress?.country + ","
+                  : ""
+              }}
+              {{ reservation?.guestDetails?.guestAddress?.zipCode }}
+            </span>
+          </label>
+          <br />
+          <label
+            class="form-label"
+            *ngIf="reservation?.secondaryGuests?.length > 0"
+            >Shared Guests:</label
+          >
+          <br />
+          <label
+            class="form-label"
+            *ngIf="reservation?.secondaryGuests?.length > 0"
+          >
+            <span
+              class="fw-semibold"
+              *ngFor="let s of reservation.secondaryGuests"
+            >
+              {{ s?.firstName }} {{ s?.lastName }}
+              <i
+                class="material-symbols-rounded ms-1"
+                style="font-size: 20px"
+                (click)="
+                  openGuestForm(
+                    guestModal,
+                    reservation._id,
+                    true,
+                    s,
+                    s?.guestAddress
+                  )
+                "
+                aria-label="Edit shared guest details"
+              >
+                edit
+              </i>
+              <br />
+            </span>
+          </label>
+        </div>
+        <div class="col-md-3 col-4 text-end">
+          <div class="d-flex flex-column">
+            <label
+              class="form-label fw-semibold link"
+              (click)="openGuestForm(guestModal, reservation._id, false)"
+            >
+              Add Guest
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openCheckInModal(confirmModal, reservation)"
+              *ngIf="
+                Today === reservation?.arrival &&
+                reservation?.reservationStatus == 'reserved'
+              "
+            >
+              Check In
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openCheckOutModal(confirmModal, reservation)"
+              *ngIf="reservation?.reservationStatus == 'inhouse'"
+            >
+              Check Out
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="readCancelCharge(reservation, cancelReservationModal)"
+              *ngIf="reservation?.reservationStatus == 'reserved'"
+            >
+              Cancel Room
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="readNoshowCharge(reservation, noshowReservationModal)"
+              *ngIf="
+                Today > reservation?.arrival &&
+                reservation?.reservationStatus == 'reserved'
+              "
+            >
+              No Show
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openUpdateStayModal(reservation, stayUpdateModal)"
+              *ngIf="
+                reservation?.reservationStatus == 'reserved' ||
+                reservation?.reservationStatus == 'inhouse'
+              "
+            >
+              Update Stay
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openChangeRoomModal(reservation, changeRoomModal)"
+            >
+              {{ reservation?.tentative ? "Assign Room" : "Change Room" }}
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="showRoomCharges(reservation)"
+            >
+              {{ reservation.showCharges ? "Hide" : "Show" }} Charges
+            </label>
+            <label
+              class="form-label fw-semibold mt-2 link"
+              (click)="openAddChargeModal(postChargeModal, reservation)"
+            >
+              Add Charges
+            </label>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="reservation.showCharges">
+          <table class="table pb-0 pay-table mt-3 mb-2">
+            <thead>
+              <tr>
+                <th scope="col">Charges</th>
+                <th scope="col">Date</th>
+                <th scope="col">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of reservation?.roomBalances">
+                <td>{{ r.balance | balance }}</td>
+                <td>{{ r.balanceDate | date }}</td>
+                <td>{{ r.balanceName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="card container_form p-3 m-2 rounded">
+      <label class="form-label fw-semibold">Room Summary</label>
+      <div class="card-body pt-2">
+        <label class="form-label">
+          Adults/Children:
+          <span class="fw-semibold"
+            >{{ reservation?.reservationDetails?.adults }} /{{
+              reservation?.reservationDetails?.childs
+            }}</span
+          ></label
+        >
+        <br />
+        <label class="form-label">
+          Room Price:
+          <span class="fw-semibold"
+            >{{ reservation?.reservationDetails?.roomPrice | currency : "INR" }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Charges:
+          <span class="fw-semibold"
+            >{{
+              reservation?.reservationDetails?.roomExtraCharge
+                | currency : "INR"
+            }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Tax:
+          <span class="fw-semibold">
+            {{
+              reservation?.reservationDetails?.roomCost -
+                reservation?.reservationDetails?.roomPrice | currency : "INR"
+            }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Room Cost:
+          <span class="fw-semibold"
+            >{{ reservation?.reservationDetails?.roomCost | currency : "INR" }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Rate Plan :
+          <span class="fw-semibold"
+            >{{ reservation?.rateDetails?.ratePlanName }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Status :
+          <span class="fw-semibold"
+            >{{ reservation?.reservationStatus | status }}
+          </span></label
+        >
+      </div>
+    </div>
+  </div>
+  }
+  <div class="col-md-9 col-12">
+    <div class="container_form p-3 m-2 rounded">
+      <label class="form-label fw-semibold">Payment Details</label>
+      <table class="table pb-0 pay-table mt-2">
+        <thead>
+          <tr>
+            <th scope="col">Payment</th>
+            <th scope="col">Date</th>
+            <th scope="col">Receipt</th>
+            <th scope="col">Mode</th>
+            <th scope="col">Type</th>
+            <th scope="col">Remark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of groupDetails?.paymentDetails">
+            <td>{{ r.transactionDetails?.transactionRate }}</td>
+            <td>{{ r.transactionDate | date }}</td>
+            <td>{{ r.transactionDetails?.receipt }}</td>
+            <td>
+              {{ r?.transactionDetails?.paymentType }}
+            </td>
+            <td>
+              {{ r.isRefund ? "Refund" : "" }}{{ r.isDeposit ? "Deposit" : ""
+              }}{{ r.isAuthorize ? "Authorized" : "" }}
+              <span
+                *ngIf="r.isDeposit"
+                class="link"
+                (click)="openDepositModal(depositReleaseModal, r)"
+              >
+                Capture</span
+              >
+            </td>
+            <td>
+              {{ r?.transactionDetails?.transactionDetail }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="card container_form p-3 m-2 rounded">
+      <label class="form-label fw-semibold">Payment Summary</label>
+      <div class="card-body pt-2">
+        <label class="form-label">
+          Total Extra Charge:
+          <span class="fw-semibold">{{
+            groupDetails?.totalExtraCharge | currency : "INR"
+          }}</span>
+        </label>
+        <br />
+        <label class="form-label">
+          Total Cost:
+          <span class="fw-semibold">{{
+            groupDetails?.totalCost | currency : "INR"
+          }}</span>
+        </label>
+        <label class="form-label">
+          Total Payment:
+          <span class="fw-semibold"
+            >{{ groupDetails?.totalPayment | currency : "INR" }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Total Deposit:
+          <span class="fw-semibold"
+            >{{ groupDetails?.totalDeposit | currency : "INR" }}
+          </span></label
+        >
+        <br />
+        <label class="form-label">
+          Total Balance:
+          <span class="fw-semibold"
+            >{{ -groupDetails?.totalBalance | currency : "INR" }}
+          </span></label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #stayUpdateModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Stay Update</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <label class="form-label">Arrival Date</label>
+    <input
+      type="date"
+      class="form-control"
+      name="updateStayArrival"
+      [min]="FormatToday"
+      (input)="setDeparture()"
+      [(ngModel)]="updateStayArrival"
+      #arrival="ngModel"
+      required
+      placeholder="Enter arrival"
+    />
+    <div *ngIf="arrival.invalid && (arrival.dirty || arrival.touched)">
+      <div *ngIf="arrival.errors?.['required']">Arrival date is required.</div>
+    </div>
+    <label class="form-label">Departure Date</label>
+    <input
+      type="date"
+      class="form-control"
+      name="updateStayDeparture"
+      [min]="nextDate()"
+      [(ngModel)]="updateStayDeparture"
+      #departure="ngModel"
+      required
+      placeholder="Enter departure"
+    />
+    <div *ngIf="departure.invalid && (departure.dirty || departure.touched)">
+      <div *ngIf="departure.errors?.['required']">
+        Departure date is required.
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      [disabled]="checkDate()"
+      (click)="modal.close(true)"
+    >
+      Save
+    </button>
+  </div>
+</ng-template>
+<ng-template #addRoomModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Select Room</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div
+      class="container-fluid text-center"
+      *ngIf="roomsData.length > 0; else noRoomsTemplate"
+    >
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Room Type Name</th>
+            <th>Sleeps</th>
+            <th>Rate</th>
+            <th>Cost</th>
+            <th>No. of Rooms</th>
+            <th>Room</th>
+            <th>Selected</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let room of roomsData; let i = index">
+            <td>{{ room.roomtype }} {{ room.rateName }}</td>
+            <td>
+              {{ room.adultOccupant }} Adults {{ room.childOccupant }} Childs
+            </td>
+            <td>{{ room.roomPrice }}</td>
+            <td>{{ room.roomCost }}</td>
+            <td>
+              <button
+                class="btn btn-primary p-0 me-1"
+                (click)="addRoomCount(i)"
+                [disabled]="
+                  room?.dropdownSettings?.limitSelection > 0 ||
+                  room?.dropdownSettings?.limitSelection >= room.totalRoom ||
+                  currentRoomCount > 0
+                "
+              >
+                <i class="material-symbols-rounded">add</i>
+              </button>
+              <span class="mx-1">{{
+                room?.dropdownSettings?.limitSelection
+              }}</span>
+              <button
+                class="btn btn-primary p-0 ms-1"
+                (click)="removeRoomCount(i)"
+                [disabled]="room?.dropdownSettings?.limitSelection === 0"
+              >
+                <i class="material-symbols-rounded">remove</i>
+              </button>
+            </td>
+            <td>
+              <ng-multiselect-dropdown
+                name="roomtype"
+                [placeholder]="'Select Room'"
+                [settings]="room.dropdownSettings"
+                [data]="dropDownData(room.rooms, i)"
+                [(ngModel)]="selectedItems[i]"
+                class="multiselect_dropdown"
+              ></ng-multiselect-dropdown>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                [disabled]="room?.dropdownSettings?.limitSelection === 0"
+                (click)="modal.close(true)"
+              >
+                Continue
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noRoomsTemplate>
+      <p>No rooms available. Please check back later.</p>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #changeRoomModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Change Room</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid text-center" *ngIf="roomsData.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Room Name</th>
+            <th>Room Status</th>
+            <th>Rate</th>
+            <th>Cost</th>
+            <th>Selected</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let roomtype of roomsData; let i = index">
+            <tr *ngFor="let room of roomtype.rooms; let j = index">
+              <td>{{ roomtype.roomtype }} {{ room.roomName }}</td>
+              <td>{{ room.roomStatus }}</td>
+              <td>{{ roomtype.roomPrice }}</td>
+              <td>{{ roomtype.roomCost }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  (click)="callChangeRoom(roomtype, room, confirmChangeRoom)"
+                >
+                  Continue
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="justify-content-center"
+      *ngIf="
+        currentReservation?.reservationStatus == 'reserved' &&
+        currentReservation?.roomId &&
+        !currentReservation?.tentative
+      "
+    >
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="unassignRoom()"
+      >
+        Unassign
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #paymentModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Make Payment</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body" [formGroup]="paymentForm">
+    <div class="row">
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Select Payment Type</label>
+        <select
+          class="form-control text-center select_reason"
+          formControlName="paymentType"
+        >
+          <option value="cash">Cash</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="cloud">Cloud</option>
+        </select>
+      </div>
+      <div class="col-md-2 mt-3">
+        <label class="form-label">Amount</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="amount"
+          placeholder="Enter amount"
+          [ngClass]="{
+            'is-invalid':
+              paymentForm.get('amount')?.invalid &&
+              (paymentForm.get('amount')?.dirty ||
+                paymentForm.get('amount')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            paymentForm.get('amount')?.invalid &&
+            (paymentForm.get('amount')?.dirty ||
+              paymentForm.get('amount')?.touched)
+          "
+          >Amount is required</small
+        >
+      </div>
+      <div class="col-md-2 mt-3">
+        <div
+          class="mt-4"
+          *ngIf="paymentForm.get('paymentType')?.value === 'cash'"
+        >
+          <label class="form-label me-2">Deposit</label>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            formControlName="deposit"
+          />
+        </div>
+      </div>
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Remark</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="remark"
+          placeholder="Enter remark"
+          [ngClass]="{
+            'is-invalid':
+              paymentForm.get('remark')?.invalid &&
+              (paymentForm.get('remark')?.dirty ||
+                paymentForm.get('remark')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            paymentForm.get('remark')?.invalid &&
+            (paymentForm.get('remark')?.dirty ||
+              paymentForm.get('remark')?.touched)
+          "
+          >Remark is required</small
+        >
+      </div>
+      <div class="col-md-2 mt-3">
+        <div class="d-flex justify-content-center">
+          <button
+            *ngIf="paymentForm.get('paymentType')?.value != 'cloud'"
+            class="btn btn-primary mt-4"
+            type="button"
+            [disabled]="paymentForm.invalid"
+            (click)="modal.close(true)"
+          >
+            Pay
+          </button>
+          <button
+            *ngIf="paymentForm.get('paymentType')?.value === 'cloud'"
+            class="btn btn-primary mt-4"
+            type="button"
+            [disabled]="paymentForm.invalid"
+            (click)="createPaymentOrder()"
+          >
+            Proceed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #postChargeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Post Charge</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body" [formGroup]="postChargeForm">
+    <div class="row">
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Charge</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="charge"
+          placeholder="Enter charge"
+          [ngClass]="{
+            'is-invalid':
+              postChargeForm.get('charge')?.invalid &&
+              (postChargeForm.get('charge')?.dirty ||
+                postChargeForm.get('charge')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            postChargeForm.get('charge')?.invalid &&
+            (postChargeForm.get('charge')?.dirty ||
+              postChargeForm.get('charge')?.touched)
+          "
+          >Charge is required</small
+        >
+      </div>
+      <div class="col-md-3 mt-3">
+        <label class="form-label">reason </label>
+        <select
+          class="form-control text-center select_reason"
+          formControlName="reason"
+        >
+          <option value="damage">damage</option>
+          <option value="cancellation">cancellation</option>
+          <option value="extracharge">extracharge</option>
+          <option value="penalty">penalty</option>
+          <option value="others">others</option>
+        </select>
+      </div>
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Remark</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="remark"
+          placeholder="Enter Remark"
+        />
+      </div>
+      <div class="col-md-2 mt-3">
+        <div class="d-flex justify-content-center">
+          <button
+            class="btn btn-primary mt-4"
+            type="button"
+            [disabled]="postChargeForm.invalid"
+            (click)="modal.close(true)"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #refundModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Make Refund</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body" [formGroup]="refundForm">
+    <div class="row">
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Payment Type</label>
+        <select
+          class="form-control text-center select_reason"
+          formControlName="paymentType"
+        >
+          <option value="cash">Cash</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="cloud">Cloud</option>
+        </select>
+      </div>
+      <div
+        class="col-md-3 mt-3"
+        *ngIf="refundForm.get('paymentType')?.value == 'cloud'"
+      >
+        <label class="form-label">Card</label>
+        <select
+          id="options"
+          formControlName="payId"
+          class="form-control"
+          style="appearance: auto"
+          (change)="onCardChange($event)"
+        >
+          <option
+            *ngFor="let option of cardsArray"
+            [value]="option.extraDetails.id"
+          >
+            {{ option.extraDetails?.id }} {{ option.extraDetails?.vpa
+            }}{{ option.extraDetails?.card?.last4 }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-2 mt-3">
+        <label class="form-label">Amount</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="amount"
+          placeholder="Enter amount"
+          [ngClass]="{
+            'is-invalid':
+              refundForm.get('amount')?.invalid &&
+              (refundForm.get('amount')?.dirty ||
+                refundForm.get('amount')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            refundForm.get('amount')?.invalid &&
+            (refundForm.get('amount')?.dirty ||
+              refundForm.get('amount')?.touched)
+          "
+          >Amount is required</small
+        >
+      </div>
+
+      <div class="col-md-3 mt-3">
+        <label class="form-label">Remark</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="remark"
+          placeholder="Enter remark"
+          [ngClass]="{
+            'is-invalid':
+              refundForm.get('remark')?.invalid &&
+              (refundForm.get('remark')?.dirty ||
+                refundForm.get('remark')?.touched)
+          }"
+        />
+        <small
+          class="text-danger"
+          *ngIf="
+            refundForm.get('remark')?.invalid &&
+            (refundForm.get('remark')?.dirty ||
+              refundForm.get('remark')?.touched)
+          "
+          >Remark is required</small
+        >
+      </div>
+      <div class="col-md-2 mt-3">
+        <div class="d-flex justify-content-center">
+          <button
+            class="btn btn-primary mt-4"
+            type="button"
+            *ngIf="refundForm.get('paymentType')?.value != 'cloud'"
+            [disabled]="
+              refundForm.invalid ||
+              refundForm.get('maxRefund')?.value <
+                refundForm.get('amount')?.value
+            "
+            (click)="modal.close(true)"
+          >
+            Refund
+          </button>
+          <button
+            class="btn btn-primary mt-4"
+            type="button"
+            *ngIf="refundForm.get('paymentType')?.value == 'cloud'"
+            [disabled]="
+              refundForm.invalid ||
+              (cardDetails.extraDetails?.amount -
+                cardDetails.extraDetails?.amount_refunded) /
+                100 <
+                refundForm.get('amount')?.value
+            "
+            (click)="modal.close(true)"
+          >
+            Proceed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #noshowReservationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Noshow Reservation</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body" *ngIf="noshowDetails">
+    <p>
+      According to {{ noshowDetails.noShowPolicyName }} Policy ({{
+        noshowDetails.chargeValue
+      }}-{{ noshowDetails.chargeType }}), you charge for:
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="noshowDetails.penalty"
+        placeholder="Enter charge"
+      />
+      <br />
+      Press YES to continue.
+    </p>
+    <div class="d-flex justify-content-center">
+      <button
+        class="btn btn-primary mt-4 me-1"
+        type="button"
+        (click)="modal.close(true)"
+      >
+        YES
+      </button>
+      <button
+        class="btn btn-outline-primary mt-4 ms-1"
+        type="button"
+        (click)="modal.close(false)"
+      >
+        NO
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #depositReleaseModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Deposit Operation</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body" *ngIf="depositObj">
+    <p>
+      Total Amount {{ depositObj?.transactionDetails?.transactionRate }}
+      <br />
+      Capture Amount<input
+        type="number"
+        class="form-control"
+        [max]="depositObj?.transactionDetails?.transactionRate"
+        [(ngModel)]="depositObj.transactionDetails.captureAmount"
+        placeholder="Enter Capture Amount"
+      />
+      <br />
+      Release Amount @if(depositObj.transactionDetails.captureAmount >= 0 ){
+      {{
+        depositObj?.transactionDetails?.transactionRate -
+          depositObj.transactionDetails.captureAmount
+      }}
+      }
+    </p>
+    <div class="d-flex justify-content-center">
+      <button
+        class="btn btn-primary mt-4 me-1"
+        type="button"
+        [disabled]="
+          depositObj.transactionDetails.captureAmount < 0 ||
+          depositObj?.transactionDetails?.transactionRate <
+            depositObj.transactionDetails.captureAmount
+        "
+        (click)="modal.close(true)"
+      >
+        YES
+      </button>
+      <button
+        class="btn btn-outline-primary mt-4 ms-1"
+        type="button"
+        (click)="modal.close(false)"
+      >
+        NO
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cancelReservationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Cancel Reservation</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+  <div class="modal-body" *ngIf="cancelDetails">
+    <p>
+      According to {{ cancelDetails.cancelPolicyName }} Policy & window Range
+      ({{ cancelDetails.windowRange }}) ({{
+        cancelDetails.isInsideRange
+          ? cancelDetails.insideWindowCharge
+          : cancelDetails.outsideWindowCharge
+      }}-{{ cancelDetails.windowType }}), you charge for:
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="cancelDetails.penalty"
+        placeholder="Enter charge"
+      />
+      <br />
+      Press YES to continue.
+    </p>
+    <div class="d-flex justify-content-center">
+      <button
+        class="btn btn-primary mt-4 me-1"
+        type="button"
+        (click)="modal.close(true)"
+      >
+        YES
+      </button>
+      <button
+        class="btn btn-outline-primary mt-4 ms-1"
+        type="button"
+        (click)="modal.close(false)"
+      >
+        NO
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #guestModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ guestForm.get("_id")?.value ? "Update" : "Add" }} Guest Details
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close(false)"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="guestForm" class="container_form p-3 m-2 rounded">
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mt-3">
+          <label class="form-label"> First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="firstName"
+            placeholder="Enter  First Name"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('firstName')?.dirty ||
+                  guestForm.get('firstName')?.touched) &&
+                guestForm.get('firstName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('firstName')?.dirty ||
+                guestForm.get('firstName')?.touched) &&
+              guestForm.get('firstName')?.invalid
+            "
+            >First Name is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label"> Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="lastName"
+            placeholder="Enter  Last Name"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('lastName')?.dirty ||
+                  guestForm.get('lastName')?.touched) &&
+                guestForm.get('lastName')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('lastName')?.dirty ||
+                guestForm.get('lastName')?.touched) &&
+              guestForm.get('lastName')?.invalid
+            "
+            >Last Name is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label"> Phone</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="phone"
+            placeholder="Enter  Phone"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('phone')?.dirty ||
+                  guestForm.get('phone')?.touched) &&
+                guestForm.get('phone')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('phone')?.dirty ||
+                guestForm.get('phone')?.touched) &&
+              guestForm.get('phone')?.invalid
+            "
+            >Phone is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label"> Email</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="email"
+            placeholder="Enter  Email"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('email')?.dirty ||
+                  guestForm.get('email')?.touched) &&
+                guestForm.get('email')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('email')?.dirty ||
+                guestForm.get('email')?.touched) &&
+              guestForm.get('email')?.invalid
+            "
+            >Email is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Address Line 1</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressLine1"
+            placeholder="Enter Address Line 1"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('addressLine1')?.dirty ||
+                  guestForm.get('addressLine1')?.touched) &&
+                guestForm.get('addressLine1')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('addressLine1')?.dirty ||
+                guestForm.get('addressLine1')?.touched) &&
+              guestForm.get('addressLine1')?.invalid
+            "
+            >Address Line 1 is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Address Line 2</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="addressLine2"
+            placeholder="Enter Address Line 2"
+          />
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">City</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="city"
+            placeholder="Enter City"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('city')?.dirty ||
+                  guestForm.get('city')?.touched) &&
+                guestForm.get('city')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('city')?.dirty ||
+                guestForm.get('city')?.touched) &&
+              guestForm.get('city')?.invalid
+            "
+            >City is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">State</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="state"
+            placeholder="Enter State"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('state')?.dirty ||
+                  guestForm.get('state')?.touched) &&
+                guestForm.get('state')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('state')?.dirty ||
+                guestForm.get('state')?.touched) &&
+              guestForm.get('state')?.invalid
+            "
+            >State is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Country</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="country"
+            placeholder="Enter Country"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('country')?.dirty ||
+                  guestForm.get('country')?.touched) &&
+                guestForm.get('country')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('country')?.dirty ||
+                guestForm.get('country')?.touched) &&
+              guestForm.get('country')?.invalid
+            "
+            >Country is required</small
+          >
+        </div>
+
+        <div class="col mt-3">
+          <label class="form-label">Zip Code</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="zipCode"
+            placeholder="Enter Zip Code"
+            [ngClass]="{
+              'is-invalid':
+                (guestForm.get('zipCode')?.dirty ||
+                  guestForm.get('zipCode')?.touched) &&
+                guestForm.get('zipCode')?.invalid
+            }"
+          />
+          <small
+            class="text-danger"
+            *ngIf="
+              (guestForm.get('zipCode')?.dirty ||
+                guestForm.get('zipCode')?.touched) &&
+              guestForm.get('zipCode')?.invalid
+            "
+            >Zip Code is required</small
+          >
+        </div>
+        <div class="col mt-3">
+          <ngx-file-drop
+            dropZoneClassName="my-style"
+            contentClassName="my-style"
+            (onFileDrop)="dropped($event, guestForm)"
+          >
+            <ng-template
+              ngx-file-drop-content-tmp
+              let-openFileSelector="openFileSelector"
+            >
+              <a
+                class="card-link"
+                (click)="openFileSelector()"
+                style="cursor: pointer"
+                >Add
+                <i class="material-symbols-rounded" style="font-size: 20px">
+                  file_present</i
+                ></a
+              >
+            </ng-template>
+          </ngx-file-drop>
+        </div>
+        <div class="col mt-3"></div>
+        <div class="col-lg-12 d-flex flex-wrap mt-3">
+          <div
+            *ngFor="let s of guestForm.get('documents')?.value"
+            class="d-flex"
+          >
+            <img
+              [src]="s"
+              alt="img"
+              class="m-2"
+              style="height: 100px; width: 100px"
+            />
+
+            <i
+              class="material-symbols-rounded text-danger pt-2"
+              (click)="deletePhotos(s)"
+            >
+              delete
+            </i>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="d-flex justify-content-center">
+      <button
+        class="btn btn-primary mt-4 me-1"
+        type="button"
+        (click)="modal.close(true)"
+      >
+        {{ guestForm.get("_id")?.value ? "Update" : "Add" }}
+      </button>
+      <button
+        class="btn btn-outline-primary mt-4"
+        type="button"
+        (click)="modal.close(false)"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-outline-danger mt-4 ms-1"
+        type="button"
+        *ngIf="guestForm.get('isCustomer')?.value"
+        (click)="modal.close('delete')"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #confirmModal let-modal>
+  <div class="modal-body">
+    <h6 class="modal-title">{{ confirmMsg }}</h6>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close(true)">
+      Yes
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close(false)"
+    >
+      No
+    </button>
+  </div>
+</ng-template>
+<ng-template #confirmChangeRoom let-modal>
+  <div class="modal-body">
+    <h6 class="modal-title"> Are you sure want to countinue with ? </h6>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close(true)">
+      Same Rate
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.close(false)"
+    >
+      New Rate
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="modal.dismiss(false)"
+    >
+      Cancel
+    </button>
+  </div>
+</ng-template>
+
+<div id="invoice-content" hidden>
+  <div style="width: 100%; font-family: Tahoma !important">
+    <div>
+      <h3 style="margin-bottom: 7px">
+        <b>{{ propertyUnitData.propertyUnitName }}</b>
+      </h3>
+      <p style="margin-top: 5px; margin-bottom: 5px">
+        {{ propertyUnitData.propertyAddress?.addressLine1 }}
+        {{ propertyUnitData.propertyAddress?.addressLine2 }}
+        {{ propertyUnitData.propertyAddress?.city }}
+      </p>
+      <p style="margin-top: 5px; margin-bottom: 5px">
+        Phone: {{ propertyUnitData.managerDetails?.phone }};
+      </p>
+      <p style="margin-top: 5px; margin-bottom: 5px">
+        E-mail: {{ propertyUnitData.managerDetails?.email }};
+      </p>
+      <hr style="color: black" />
+    </div>
+    <div>
+      <div>
+        <h3 style="margin: 5px; margin-left: 0px">Reservation Summary</h3>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <div style="width: 33%">
+          <table>
+            <tr>
+              <td>Customer Name</td>
+              <td> : </td>
+              <td>
+                {{ groupDetails?.customerDetails?.firstName }}
+                {{ groupDetails?.customerDetails?.lastName }}
+              </td>
+            </tr>
+            <tr>
+              <td>Group No</td>
+              <td> : </td>
+              <td> {{ groupDetails?.groupNumber }} </td>
+            </tr>
+            <tr>
+              <td>Total Rooms</td>
+              <td> : </td>
+              <td>
+                {{ groupDetails?.reservations?.length }}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="width: 33%">
+          <table>
+            <tr>
+              <td>Total Price</td>
+              <td> : </td>
+              <td> {{ groupDetails?.totalPrice | currency : "INR" }} </td>
+            </tr>
+            <tr>
+              <td>Total Tax</td>
+              <td> : </td>
+              <td> {{ groupDetails?.totalTax | currency : "INR" }} </td>
+            </tr>
+            <tr>
+              <td>Total Charge</td>
+              <td> : </td>
+              <td> {{ groupDetails?.totalExtraCharge | currency : "INR" }} </td>
+            </tr>
+            <tr>
+              <td>Total Cost</td>
+              <td> : </td>
+              <td> {{ groupDetails?.totalCost | currency : "INR" }} </td>
+            </tr>
+          </table>
+        </div>
+        <div style="width: 33%">
+          <table>
+            <tr>
+              <td>Total Payment</td>
+              <td> : </td>
+              <td> {{ groupDetails?.totalPayment | currency : "INR" }} </td>
+            </tr>
+            <tr>
+              <td>Total Deposit</td>
+              <td> : </td>
+              <td> {{ groupDetails?.totalDeposit | currency : "INR" }} </td>
+            </tr>
+            <tr>
+              <td>Total Balance</td>
+              <td> : </td>
+              <td> {{ -groupDetails?.totalBalance | currency : "INR" }} </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <hr style="color: black" />
+      @for (reservation of groupDetails?.reservations; track reservation; let i
+      = $index) {
+      <div style="margin-top: 10px">
+        <h3 style="margin: 5px; margin-left: 0px"
+          >Room - {{ i + 1 }} (#{{ reservation.confirmationNumber }})
+        </h3>
+        <div style="display: flex">
+          <div style="width: 33%">
+            <table>
+              <tr>
+                <td>Adults/Children</td>
+                <td>:</td>
+                <td>
+                  {{ reservation?.reservationDetails?.adults }}/{{
+                    reservation?.reservationDetails?.childs
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Room Type </td>
+                <td>:</td>
+                <td>{{ reservation?.roomTypeDetails?.roomTypeName }}</td>
+              </tr>
+              <tr>
+                <td>Room </td>
+                <td>:</td>
+                <td>
+                  {{
+                    reservation?.roomDetails?.roomName
+                      ? reservation?.roomDetails?.roomName
+                      : "unassign"
+                  }}</td
+                >
+              </tr>
+            </table>
+          </div>
+          <div style="width: 33%">
+            <table>
+              <tr>
+                <td>Arrival</td>
+                <td>:</td>
+                <td>
+                  {{ reservation?.arrival | date }}
+                </td>
+              </tr>
+              <tr>
+                <td>Departure</td>
+                <td>:</td>
+                <td>
+                  {{ reservation?.departure | date }}
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div style="width: 33%">
+            <table>
+              <tr>
+                <td>Room Price</td>
+                <td> : </td>
+                <td>
+                  {{
+                    reservation?.reservationDetails?.roomPrice
+                      | currency : "INR"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Charges</td>
+                <td> : </td>
+                <td>
+                  {{
+                    reservation?.reservationDetails?.roomExtraCharge
+                      | currency : "INR"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Tax</td>
+                <td> : </td>
+                <td>
+                  {{
+                    reservation?.reservationDetails?.roomCost -
+                      reservation?.reservationDetails?.roomPrice
+                      | currency : "INR"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Room Cost</td>
+                <td> : </td>
+                <td>
+                  {{
+                    reservation?.reservationDetails?.roomCost | currency : "INR"
+                  }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <hr style="color: black" />
+      }
+    </div>
+
+    <hr style="color: black" />
+    <p style="font-size: 12px">
+      &emsp;Only registered guests allowed in the room. Violation of this policy
+      will result in eviction.
+    </p>
+    <p style="font-size: 12px">
+      &emsp;I agree that my liability for this bill is not waived and agree to
+      be held personally liable in the event that the indicated person, company,
+      or association fails to pay the, full amount of these charges.
+    </p>
+  </div>
+</div>

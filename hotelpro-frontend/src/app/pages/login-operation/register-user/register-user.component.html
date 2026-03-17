@@ -1,0 +1,384 @@
+<div class="parent">
+  <div class="container">
+    <div class="title">Registration</div>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="user__details">
+        <div class="input__box">
+          <span class="details">Primary Property Name*</span>
+          <input
+            type="text"
+            placeholder="Primary Property Name"
+            formControlName="primaryPropertyName"
+          />
+          <div
+            *ngIf="
+              userForm.get('primaryPropertyName')?.invalid &&
+              (userForm.get('primaryPropertyName')?.dirty ||
+                userForm.get('primaryPropertyName')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('primaryPropertyName')?.errors?.['required']"
+              >Primary Property Name is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('primaryPropertyName')?.errors?.['minlength']"
+              >Primary Property Name must be at least 3 characters long</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('primaryPropertyName')?.errors?.['noLeadingSpace']"
+              >Primary Property Name cannot start with a space</small
+            >
+          </div>
+        </div>
+        <div class="input__box">
+          <span class="details">First Name*</span>
+          <input
+            type="text"
+            placeholder="First Name"
+            formControlName="firstName"
+          />
+          <div
+            *ngIf="
+              userForm.get('firstName')?.invalid &&
+              (userForm.get('firstName')?.dirty ||
+                userForm.get('firstName')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('firstName')?.errors?.['required']"
+              >First Name is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('firstName')?.errors?.['minlength']"
+              >First Name must be at least 2 characters long</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('firstName')?.errors?.['noLeadingSpace']"
+              >First Name cannot start with a space</small
+            >
+          </div>
+        </div>
+        <div class="input__box">
+          <span class="details">Last Name*</span>
+          <input
+            type="text"
+            placeholder="Last Name"
+            formControlName="lastName"
+          />
+          <div
+            *ngIf="
+              userForm.get('lastName')?.invalid &&
+              (userForm.get('lastName')?.dirty ||
+                userForm.get('lastName')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('lastName')?.errors?.['required']"
+              >Last Name is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('lastName')?.errors?.['minlength']"
+              >Last Name must be at least 2 characters long</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('lastName')?.errors?.['noLeadingSpace']"
+              >Last Name cannot start with a space</small
+            >
+          </div>
+        </div>
+        <div class="input__box">
+          <span class="details">Email*</span>
+          <input
+            type="email"
+            placeholder="johnsmith@hotmail.com"
+            formControlName="email"
+          />
+          <div
+            *ngIf="
+              userForm.get('email')?.invalid &&
+              (userForm.get('email')?.dirty || userForm.get('email')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('email')?.errors?.['required']"
+              >Email is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('email')?.errors?.['email']"
+              >Invalid email format</small
+            >
+          </div>
+        </div>
+        <div class="input__box">
+          <span class="details">Phone Number*</span>
+          <input
+            type="tel"
+            placeholder="012-345-6789"
+            formControlName="phone"
+            maxlength="10"
+          />
+          <div
+            *ngIf="
+              userForm.get('phone')?.invalid &&
+              (userForm.get('phone')?.dirty || userForm.get('phone')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('phone')?.errors?.['required']"
+              >Phone Number is required</small
+            >
+          </div>
+        </div>
+        <div class="input__box" formGroupName="address">
+          <span class="details">Street</span>
+          <input
+            type="text"
+            placeholder="Street"
+            formControlName="addressLine1"
+          />
+        </div>
+        <div class="input__box" formGroupName="address">
+          <span class="details">City*</span>
+          <input type="text" placeholder="City" formControlName="city" />
+          <div
+            *ngIf="
+              userForm.get('address.city')?.invalid &&
+              (userForm.get('address.city')?.dirty ||
+                userForm.get('address.city')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.city')?.errors?.['required']"
+              >City is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.city')?.errors?.['noLeadingSpace']"
+              >City cannot start with a space</small
+            >
+          </div>
+        </div>
+        <div class="input__box" formGroupName="address">
+          <span class="details">State*</span>
+          <input type="text" placeholder="State" formControlName="state" />
+          <div
+            *ngIf="
+              userForm.get('address.state')?.invalid &&
+              (userForm.get('address.state')?.dirty ||
+                userForm.get('address.state')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.state')?.errors?.['required']"
+              >State is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.state')?.errors?.['pattern']"
+              >State must contain only letters</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.state')?.errors?.['noLeadingSpace']"
+              >State cannot start with a space</small
+            >
+          </div>
+        </div>
+        <div class="input__box" formGroupName="address">
+          <span class="details">ZIP Code*</span>
+          <input type="text" placeholder="ZIP Code" formControlName="zipCode" />
+          <div
+            *ngIf="
+              userForm.get('address.zipCode')?.invalid &&
+              (userForm.get('address.zipCode')?.dirty ||
+                userForm.get('address.zipCode')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.zipCode')?.errors?.['required']"
+              >ZIP Code is required. <br />
+            </small>
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('address.zipCode')?.errors?.['zipCode']"
+              >ZIP Code must be 6-8 digits long</small
+            >
+          </div>
+        </div>
+        <div class="input__box">
+          <span class="details">Password*</span>
+          <div style="position: relative">
+            <input
+              type="password"
+              #passwordInput
+              placeholder="********"
+              formControlName="password"
+            />
+            <div
+              class="eye-icon"
+              (click)="
+                passwordInput.type =
+                  passwordInput.type === 'password' ? 'text' : 'password'
+              "
+              style="position: absolute; top: 10px; right: 10px"
+            >
+              <div *ngIf="passwordInput.type === 'text'" class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="#355685"
+                  class="bi bi-eye-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                  <path
+                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"
+                  />
+                </svg>
+              </div>
+
+              <div *ngIf="passwordInput.type === 'password'" class="sicon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="#355685"
+                  class="bi bi-eye-slash"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+                  />
+                  <path
+                    d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
+                  />
+                  <path
+                    d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              userForm.get('password')?.invalid &&
+              (userForm.get('password')?.dirty ||
+                userForm.get('password')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('password')?.errors?.['required']"
+              >Password is required</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('password')?.errors?.['minlength']"
+              >Password must be at least 8 characters long</small
+            >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('password')?.errors?.['passwordStrength']"
+              >Password must contain at least one uppercase letter, one
+              lowercase letter, one number, and one special character</small
+            >
+          </div>
+        </div>
+        <div class="input__box">
+          <span class="details">Confirm Password*</span>
+          <div style="position: relative">
+            <input
+              type="password"
+              #confirmpassword
+              placeholder="********"
+              formControlName="confirmpassword"
+            />
+            <div
+              class="eye-icon"
+              (click)="
+                confirmpassword.type =
+                  confirmpassword.type === 'password' ? 'text' : 'password'
+              "
+              style="position: absolute; top: 10px; right: 10px"
+            >
+              <div *ngIf="confirmpassword.type === 'text'" class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="#355685"
+                  class="bi bi-eye-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                  <path
+                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"
+                  />
+                </svg>
+              </div>
+
+              <div *ngIf="confirmpassword.type === 'password'" class="sicon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="#355685"
+                  class="bi bi-eye-slash"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+                  />
+                  <path
+                    d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
+                  />
+                  <path
+                    d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              userForm.get('confirmpassword')?.invalid &&
+              (userForm.get('confirmpassword')?.dirty ||
+                userForm.get('confirmpassword')?.touched)
+            "
+          >
+            <small
+              class="text-danger"
+              *ngIf="userForm.get('confirmpassword')?.errors?.['required']"
+              >Confirm Password is required <br
+            /></small>
+            <small class="text-danger" *ngIf="userForm.errors?.['mismatch']"
+              >Passwords must match</small
+            >
+          </div>
+        </div>
+      </div>
+      <div class="button">
+        <input type="submit" value="Register" [disabled]="userForm.invalid" />
+      </div>
+    </form>
+  </div>
+</div>

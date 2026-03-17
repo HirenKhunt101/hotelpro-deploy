@@ -1,0 +1,201 @@
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <span class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" *ngIf="userInfo">
+            <i class="fas fa-user fa-sm text-white-50"></i> Welcome, {{userInfo.firstName}}
+        </span>
+    </div>
+
+    <!-- Content Row : Summary Cards -->
+    <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Today's Revenue</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ dashboardData?.todaysRevenue | number:'1.0-0' }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Today's Reservations</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboardData?.todaysReservations || 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Units
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                        {{ dashboardData?.activePropertyUnits || 0 }} / {{ dashboardData?.totalPropertyUnits || 0 }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Clients</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboardData?.clients?.length || 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+
+    <div class="row">
+
+        <!-- Area Chart -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue Overview (7 Days)</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area" style="height: 320px; position: relative;">
+                        <canvas baseChart
+                            [data]="barChartData"
+                            [options]="barChartOptions"
+                            [plugins]="barChartPlugins"
+                            [type]="barChartType">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Usefull Links</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <a routerLink="/client-subscriptions">Client Subscriptions</a> <br>
+                    <a routerLink="/rate-management/rate-plans">Rate Plan</a> <br>
+                    <a routerLink="/rate-management/cancellation-policy">Cancellation Policy</a> <br>
+                    <a routerLink="/rate-management">Rate</a> <br>
+                    <a routerLink="/rooms/room-type">Room Type</a> <br>
+                </div>
+            </div>
+             <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Upcoming Reservations</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item" *ngFor="let res of dashboardData?.upcomingReservations">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{res.guestName}}</h6>
+                                <small>{{res.arrival | date:'shortDate'}}</small>
+                            </div>
+                            <p class="mb-1 small">{{res.hotelName}}</p>
+                            <small class="text-muted">{{res.status}}</small>
+                        </div>
+                        <div class="list-group-item text-center text-muted" *ngIf="!dashboardData?.upcomingReservations?.length">
+                            No upcoming reservations
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <!-- Content Column -->
+        <div class="col-lg-12 mb-4">
+
+            <!-- Project Card Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">All Clients</h6>
+                </div>
+                <div class="card-body">
+                     <table class="table table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Property</th>
+                                <th scope="col">Client</th>
+                                <th scope="col">Mobile</th>
+                                <th scope="col">Subscription</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let client of dashboardData?.clients; let i = index">
+                                <th scope="row">{{i+1}}</th>
+                                <td>{{ client.propertyName }}</td>
+                                <td>{{ client.clientName }}</td>
+                                <td>{{ client.phone }}</td>
+                                <td>{{ client.isVIP ? "VIP" : "Standard" }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                        (click)="login(client.email)">Login As</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
