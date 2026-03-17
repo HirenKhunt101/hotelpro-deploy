@@ -27,7 +27,8 @@ import { logger } from "../../logger/winston.logger.js";
 const options = {
   httpOnly: true,
   maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
-  secure: process.env.NODE_ENV === "production",
+  secure: true,
+  sameSite: "None",
 };
 
 const InvalidContent = {
